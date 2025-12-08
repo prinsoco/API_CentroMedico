@@ -1,0 +1,15 @@
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\bin\Debug\net8.0\ProcesoMedico.Infraestructura.deps.json
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\bin\Debug\net8.0\ProcesoMedico.Infraestructura.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\bin\Debug\net8.0\ProcesoMedico.Infraestructura.pdb
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\bin\Debug\net8.0\ProcesoMedico.Dominio.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\bin\Debug\net8.0\ProcesoMedico.Dominio.pdb
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\ProcesoMedico.Infraestructura.csproj.AssemblyReference.cache
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\ProcesoMedico.Infraestructura.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\ProcesoMedico.Infraestructura.AssemblyInfoInputs.cache
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\ProcesoMedico.Infraestructura.AssemblyInfo.cs
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\ProcesoMedico.Infraestructura.csproj.CoreCompileInputs.cache
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\ProcesoM.C313C2CB.Up2Date
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\ProcesoMedico.Infraestructura.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\refint\ProcesoMedico.Infraestructura.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\ProcesoMedico.Infraestructura.pdb
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Infraestructura\obj\Debug\net8.0\ref\ProcesoMedico.Infraestructura.dll

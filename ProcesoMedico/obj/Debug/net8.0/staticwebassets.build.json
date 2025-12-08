@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "6xB9O169Qtx/EdqSbKA7wQIJz5hAik9u1uag6fdnDhc=",
+  "Source": "ProcesoMedico.Api",
+  "BasePath": "_content/ProcesoMedico.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

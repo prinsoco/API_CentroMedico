@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Persistence\BaseRepository.cs" />
+    <Compile Remove="Repositories\AsignacionRepository.cs" />
+    <Compile Remove="Repositories\CatalogoRepository.cs" />
+    <Compile Remove="Repositories\CitaRepository.cs" />
+    <Compile Remove="Repositories\EncuestaRepository.cs" />
+    <Compile Remove="Repositories\EspecialidadRepository.cs" />
+    <Compile Remove="Repositories\FidelizacionRepository.cs" />
+    <Compile Remove="Repositories\HistoricoRepository.cs" />
+    <Compile Remove="Repositories\MedicoRepository.cs" />
+    <Compile Remove="Repositories\NotificacionRepository.cs" />
+    <Compile Remove="Repositories\PacienteRepository.cs" />
+    <Compile Remove="Repositories\ParametrosRepository.cs" />
+    <Compile Remove="Repositories\PerfilRepository.cs" />
+    <Compile Remove="Repositories\PreguntaRepository.cs" />
+    <Compile Remove="Repositories\RespuestasEncuestaRepository.cs" />
+    <Compile Remove="Repositories\RolRepository.cs" />
+    <Compile Remove="Repositories\UsuarioRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProcesoMedico.Dominio\ProcesoMedico.Dominio.csproj" />
+  </ItemGroup>
+
+</Project>

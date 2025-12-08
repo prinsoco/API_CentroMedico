@@ -1,0 +1,17 @@
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\bin\Debug\net8.0\ProcesoMedico.Aplicacion.deps.json
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\bin\Debug\net8.0\ProcesoMedico.Aplicacion.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\bin\Debug\net8.0\ProcesoMedico.Aplicacion.pdb
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\bin\Debug\net8.0\ProcesoMedico.Dominio.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\bin\Debug\net8.0\ProcesoMedico.Infraestructura.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\bin\Debug\net8.0\ProcesoMedico.Infraestructura.pdb
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\bin\Debug\net8.0\ProcesoMedico.Dominio.pdb
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\ProcesoMedico.Aplicacion.csproj.AssemblyReference.cache
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\ProcesoMedico.Aplicacion.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\ProcesoMedico.Aplicacion.AssemblyInfoInputs.cache
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\ProcesoMedico.Aplicacion.AssemblyInfo.cs
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\ProcesoMedico.Aplicacion.csproj.CoreCompileInputs.cache
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\ProcesoM.1B3042DC.Up2Date
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\ProcesoMedico.Aplicacion.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\refint\ProcesoMedico.Aplicacion.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\ProcesoMedico.Aplicacion.pdb
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Aplicacion\obj\Debug\net8.0\ref\ProcesoMedico.Aplicacion.dll

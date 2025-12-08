@@ -1,0 +1,12 @@
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\bin\Debug\net8.0\ProcesoMedico.Dominio.deps.json
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\bin\Debug\net8.0\ProcesoMedico.Dominio.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\bin\Debug\net8.0\ProcesoMedico.Dominio.pdb
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\obj\Debug\net8.0\ProcesoMedico.Dominio.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\obj\Debug\net8.0\ProcesoMedico.Dominio.AssemblyInfoInputs.cache
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\obj\Debug\net8.0\ProcesoMedico.Dominio.AssemblyInfo.cs
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\obj\Debug\net8.0\ProcesoMedico.Dominio.csproj.CoreCompileInputs.cache
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\obj\Debug\net8.0\ProcesoMedico.Dominio.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\obj\Debug\net8.0\refint\ProcesoMedico.Dominio.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\obj\Debug\net8.0\ProcesoMedico.Dominio.pdb
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\obj\Debug\net8.0\ref\ProcesoMedico.Dominio.dll
+C:\Users\so_ca\OneDrive\Documents\CentroMedico\Proyecto\ProcesoMedico\ProcesoMedico\ProcesoMedico.Dominio\obj\Debug\net8.0\ProcesoMedico.Dominio.csproj.AssemblyReference.cache
