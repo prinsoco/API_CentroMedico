@@ -43,6 +43,8 @@ builder.Services.AddScoped<ICitaService, CitaService>();
 builder.Services.AddScoped<IEncuestaService, EncuestaService>();
 builder.Services.AddScoped<IPreguntaService, PreguntaService>();
 builder.Services.AddScoped<IRespuestasEncuestaService, RespuestasEncuestaService>();
+builder.Services.AddScoped<IDashBoardService, DashBoardService>();
+builder.Services.AddScoped<IDashBoardRepository, DashBoardRepository>();
 
 //ADD Cors
 var MyCors = "AllowAll";

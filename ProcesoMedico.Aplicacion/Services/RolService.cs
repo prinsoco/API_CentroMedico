@@ -24,7 +24,8 @@ namespace ProcesoMedico.Aplicacion.Services
             {
                 Rol.Descripcion,
                 Rol.Estado,
-                Rol.UsuarioCreacion
+                Rol.UsuarioCreacion,
+                Rol.Codigo
             };
 
             return await _repo.InsertAsync(Rol, spParams);
@@ -37,7 +38,8 @@ namespace ProcesoMedico.Aplicacion.Services
                 Rol.RolId,
                 Rol.Descripcion,
                 Rol.Estado,
-                Rol.UsuarioModificacion
+                Rol.UsuarioModificacion,
+                Rol.Codigo
             };
 
             return await _repo.UpdateAsync(Rol, spParams);

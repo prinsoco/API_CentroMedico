@@ -24,7 +24,8 @@ namespace ProcesoMedico.Aplicacion.Services
             {
                 Perfil.Descripcion,
                 Perfil.Estado,
-                Perfil.UsuarioCreacion
+                Perfil.UsuarioCreacion,
+                Perfil.Codigo
             };
 
             return await _repo.InsertAsync(Perfil, spParams);
@@ -36,7 +37,8 @@ namespace ProcesoMedico.Aplicacion.Services
             {
                 Perfil.PerfilId,
                 Perfil.Descripcion,
-                Perfil.UsuarioModificacion
+                Perfil.UsuarioModificacion,
+                Perfil.Codigo
             };
 
             return await _repo.UpdateAsync(Perfil, spParams);
