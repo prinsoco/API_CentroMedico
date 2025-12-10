@@ -2,6 +2,7 @@
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Services;
 using ProcesoMedico.Dominio.Entities;
+using ProcesoMedico.Dominio.Utils;
 
 namespace ProcesoMedico.Api.Controllers.v1
 {
@@ -16,14 +17,25 @@ namespace ProcesoMedico.Api.Controllers.v1
         public async Task<IActionResult> Create([FromBody] Medico dto)
         {
             var id = await _service.InsertMedicoAsync(dto);
-            return id > 0 ? Ok(new { Code = "00", Mensaje = "Médico registrado con exito" }) : Ok(new { Code = "99", Mensaje = "Error al registro el médico" });
+            var response = new ResponseCreate()
+            {
+                Id = id,
+                Message = id > 0 ? "Médico registrado con exito" : "Error al registro el médico"
+            };
+
+            return Ok(response);
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromBody] Medico dto)
         {
             var affected = await _service.UpdateMedicoAsync(dto);
-            return Ok(new { Code = "00", Mensaje = "Registro actualizado" });
+            var response = new ResponseCreate()
+            {
+                Id = affected,
+                Message = affected > 0 ? "Médico editado con exito" : "Error al editar el médico"
+            };
+            return Ok(response);
         }
 
         [HttpGet("getById/{id:int}")]
@@ -34,10 +46,10 @@ namespace ProcesoMedico.Api.Controllers.v1
         }
 
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll([FromQuery] string? tipo, [FromQuery] string? codigo, [FromQuery] bool? estado)
+        public async Task<IActionResult> GetAll([FromHeader] string? input)
         {
-            var items = await _service.ListAsync(new { Tipo = tipo, Codigo = codigo, Estado = estado });
-            return Ok(items);
+            var items = await _service.ListAsync(new { Input = input });
+            return Ok(new ResponseDetails<List<Medico>>(items?.ToList()));
         }
 
         [HttpGet("getPaged")]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Infraestructura.Interfaces;
@@ -12,10 +13,12 @@ namespace ProcesoMedico.Aplicacion.Services
     public class MedicoService : GenericService<Medico>, IMedicoService
     {
         private readonly IGenericRepository<Medico> _repo;
+        private readonly IConfiguration _configuration;
 
-        public MedicoService(IGenericRepository<Medico> repo) : base(repo)
+        public MedicoService(IGenericRepository<Medico> repo, IConfiguration configuration) : base(repo)
         {
             _repo = repo;
+            _configuration = configuration;
         }
 
         public async Task<int> InsertMedicoAsync(Medico Medico)
@@ -28,13 +31,15 @@ namespace ProcesoMedico.Aplicacion.Services
                 Medico.Apellidos,
                 Medico.Identificacion,
                 Medico.Edad,
-                Medico.UsuarioNombre,
+                Medico.Usuario,
                 Medico.Email,
                 Medico.Telefono,
                 Medico.Celular,
                 Medico.Direccion,
                 Medico.Estado,
-                Medico.UsuarioCreacion
+                Medico.UsuarioCreacion,
+                CodPerfil = $"{_configuration["Parametros:PerfilMedico"]}",
+                CodEspecialidad = "11"
             };
 
             return await _repo.InsertAsync(Medico, spParams);
@@ -51,7 +56,7 @@ namespace ProcesoMedico.Aplicacion.Services
                 Medico.Apellidos,
                 Medico.Identificacion,
                 Medico.Edad,
-                Medico.UsuarioNombre,
+                Medico.Usuario,
                 Medico.Email,
                 Medico.Telefono,
                 Medico.Celular,

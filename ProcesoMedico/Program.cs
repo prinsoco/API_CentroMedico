@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Caching.Memory;
+using ProcesoMedico.Api.Middlewares;
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Services;
 using ProcesoMedico.Infraestructura.Interfaces;
@@ -45,6 +47,9 @@ builder.Services.AddScoped<IPreguntaService, PreguntaService>();
 builder.Services.AddScoped<IRespuestasEncuestaService, RespuestasEncuestaService>();
 builder.Services.AddScoped<IDashBoardService, DashBoardService>();
 builder.Services.AddScoped<IDashBoardRepository, DashBoardRepository>();
+builder.Services.AddScoped<IDatosCacheService, DatosCacheService>();
+builder.Services.AddScoped<IDatosCacheRepository, DatosCacheRepository>();
+builder.Services.AddScoped<IMemoryCache, MemoryCache>();
 
 //ADD Cors
 var MyCors = "AllowAll";
@@ -71,11 +76,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(MyCors);
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
+app.UseMiddleware<ResponseCatcherMiddleware>();
 app.MapControllers();
 
 app.Run();
