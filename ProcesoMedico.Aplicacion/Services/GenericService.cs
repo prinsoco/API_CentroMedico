@@ -22,5 +22,6 @@ namespace ProcesoMedico.Aplicacion.Services
         public Task<IEnumerable<T>> ListAsync(object? filters = null) => _repo.GetAllAsync(filters);
         public Task<PagedResult<T>> ListPagedAsync(object? filters, int pageNumber, int pageSize) => _repo.GetAllPagedAsync(filters, pageNumber, pageSize);
         public Task<T?> LoginAsync(object? filters = null) => _repo.LoginAsync(filters);
+        public Task<T?> GetUserAsync(string? user) => _repo.GetByUserAsync(user);
     }
 }

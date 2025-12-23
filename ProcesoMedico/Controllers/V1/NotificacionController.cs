@@ -2,45 +2,57 @@
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Services;
 using ProcesoMedico.Dominio.Entities;
+using ProcesoMedico.Dominio.Utils;
 
 namespace ProcesoMedico.Api.Controllers.v1
 {
     [ApiController]
-    [Route("api/notificacion")]
+    [Route("api/[controller]")]
     public class NotificacionController : ControllerBase
     {
         private readonly INotificacionService _service;
         public NotificacionController(INotificacionService service) => _service = service;
 
-        [HttpPost]
+        [HttpPost("crear")]
         public async Task<IActionResult> Create([FromBody] Notificacion dto)
         {
             var id = await _service.InsertNotificacionAsync(dto);
-            return id > 0 ? Ok(new { Code = "00", Mensaje = "Notificación registrada con exito" }) : Ok(new { Code = "99", Mensaje = "Error al registro la notificación" });
+            var response = new ResponseCreate()
+            {
+                Id = id,
+                Message = id > 0 ? "Notificación registrado con exito" : "Error al registro el notificación"
+            };
+
+            return Ok(response);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Notificacion dto)
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromBody] Notificacion dto)
         {
             var affected = await _service.UpdateNotificacionAsync(dto);
-            return Ok(new { Code = "00", Mensaje = "Registro actualizado" });
+            var response = new ResponseCreate()
+            {
+                Id = affected,
+                Message = affected > 0 ? "Notificación editado con exito" : "Error al editar el notificación"
+            };
+            return Ok(response);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("getById/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var item = await _service.GetAsync(id);
             return item is null ? NotFound() : Ok(item);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? tipo, [FromQuery] string? codigo, [FromQuery] bool? estado)
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAll([FromHeader] string? input)
         {
-            var items = await _service.ListAsync(new { Tipo = tipo, Codigo = codigo, Estado = estado });
-            return Ok(items);
+            var items = await _service.ListAsync(new { Input = input });
+            return Ok(new ResponseDetails<List<Notificacion>>(items?.ToList()));
         }
 
-        [HttpGet("paged")]
+        [HttpGet("getPaged")]
         public async Task<IActionResult> GetPaged([FromQuery] string? tipo, [FromQuery] string? codigo, [FromQuery] bool? estado,
                                                   [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -48,7 +60,7 @@ namespace ProcesoMedico.Api.Controllers.v1
             return Ok(result);
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id, [FromQuery] string usuarioModificacion)
         {
             var affected = await _service.DeleteAsync(id, usuarioModificacion);

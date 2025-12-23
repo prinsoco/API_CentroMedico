@@ -17,5 +17,6 @@ namespace ProcesoMedico.Aplicacion.Interfaces
         Task<IEnumerable<T>> ListAsync(object? filters = null);
         Task<PagedResult<T>> ListPagedAsync(object? filters, int pageNumber, int pageSize);
         Task<T?> LoginAsync(object? filters = null);
+        Task<T?> GetUserAsync(string? user);
     }
 }

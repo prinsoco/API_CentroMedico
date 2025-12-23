@@ -20,5 +20,6 @@ namespace ProcesoMedico.Infraestructura.Interfaces
         Task<IEnumerable<T>> GetAllAsync(object? filters = null);
         Task<PagedResult<T>> GetAllPagedAsync(object? filters, int pageNumber, int pageSize);
         Task<T?> LoginAsync(object? filters = null);
+        Task<T?> GetByUserAsync(string? user);
     }
 }

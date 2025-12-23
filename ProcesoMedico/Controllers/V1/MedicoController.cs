@@ -66,5 +66,13 @@ namespace ProcesoMedico.Api.Controllers.v1
             var affected = await _service.DeleteAsync(id, usuarioModificacion);
             return affected > 0 ? Ok(affected) : NotFound();
         }
+
+        //validar usuario
+        [HttpGet("getByUser")]
+        public async Task<IActionResult> GetByUser([FromHeader] string? user)
+        {
+            var item = await _service.GetUserAsync(user);
+            return Ok(new ResponseDetails<Medico>(item));
+        }
     }
 }

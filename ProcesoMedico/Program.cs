@@ -50,6 +50,8 @@ builder.Services.AddScoped<IDashBoardRepository, DashBoardRepository>();
 builder.Services.AddScoped<IDatosCacheService, DatosCacheService>();
 builder.Services.AddScoped<IDatosCacheRepository, DatosCacheRepository>();
 builder.Services.AddScoped<IMemoryCache, MemoryCache>();
+builder.Services.AddScoped<IHorariosService, HorariosService>();
+builder.Services.AddScoped<IHorariosRepository, HorariosRepository>();
 
 //ADD Cors
 var MyCors = "AllowAll";

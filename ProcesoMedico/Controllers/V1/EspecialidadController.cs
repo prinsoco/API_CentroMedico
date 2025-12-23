@@ -46,9 +46,9 @@ namespace ProcesoMedico.Api.Controllers.v1
         }
 
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll([FromHeader] string? input)
+        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? combo)
         {
-            var items = await _service.ListAsync(new { Input = input });
+            var items = await _service.ListAsync(new { Input = input, Combo = combo });
             return Ok(new ResponseDetails<List<Especialidad>>(items?.ToList()));
         }
 

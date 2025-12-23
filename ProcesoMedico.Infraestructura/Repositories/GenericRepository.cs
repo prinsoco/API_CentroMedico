@@ -87,5 +87,14 @@ namespace ProcesoMedico.Infraestructura.Repositories
             using var conn = _context.CreateConnection();
             return await conn.QueryFirstOrDefaultAsync<T>(Sp("Login"), filters, commandType: CommandType.StoredProcedure);
         }
+
+        public async Task<T?> GetByUserAsync(string? user)
+        {
+            using var conn = _context.CreateConnection();
+            conn.Open();
+            var param = new DynamicParameters();
+            param.Add("Usuario", user);
+            return await conn.QueryFirstOrDefaultAsync<T>(Sp("GetByUser"), param, commandType: CommandType.StoredProcedure);
+        }
     }
 }
