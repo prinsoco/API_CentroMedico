@@ -26,20 +26,6 @@ namespace ProcesoMedico.Dominio.Entities
         public string? UsuarioModificacion { get; set; }
         public string? Clave { get; set; }
         public string? DescPerfil { get; set; }
-    }
-
-    public class LoginPacienteRequest
-    {
-        public string Email { get; set; } = default!;
-        public string Clave { get; set; } = default!;
-    }
-
-    public class LoginPacienteResponse
-    {
-        public string Nombres { get; set; } = default!;
-        public string Apellidos { get; set; } = default!;
-        public string Identificacion { get; set; } = default!;
-        public int Edad { get; set; }
-        public string UsuarioNombre { get; set; } = default!;
+        public string? PacienteInfo { get; set; }
     }
 }

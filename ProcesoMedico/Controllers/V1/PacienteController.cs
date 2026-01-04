@@ -13,12 +13,11 @@ namespace ProcesoMedico.Api.Controllers.v1
         private readonly IPacienteService _service;
         public PacienteController(IPacienteService service) => _service = service;
 
-        [HttpGet("login")]
-        public async Task<IActionResult> Login([FromQuery] string? emal, [FromQuery] string? clave)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest input)
         {
-            var dto = new LoginPacienteRequest { Clave = clave, Email = emal };
-            var response = await _service.LoginPaciente(dto);
-            return Ok(response);
+            var response = await _service.LoginPaciente(input);
+            return Ok(response == null ? new { Codigo = 9999, Mensaje = "Usuario o clave incorrectos" } : response);
         }
 
         [HttpPost("crear")]
@@ -54,9 +53,9 @@ namespace ProcesoMedico.Api.Controllers.v1
         }
 
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll([FromHeader] string? input)
+        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? combo)
         {
-            var items = await _service.ListAsync(new { Input = input });
+            var items = await _service.ListAsync(new { Input = input, Combo = combo });
             return Ok(new ResponseDetails<List<Paciente>>(items?.ToList()));
         }
 

@@ -8,15 +8,22 @@ namespace ProcesoMedico.Dominio.Entities
 {
     public class Cita
     {
-        public int CitaId { get; set; }
-        public int PacienteId { get; set; }
-        public int MedicoId { get; set; }
-        public DateTime FechaCita { get; set; }
+        public int? CitaId { get; set; }
+        public int? PacienteId { get; set; }
+        public int? MedicoId { get; set; }
+        public DateTime? FechaCita { get; set; }
         public string? Motivo { get; set; }
-        public string Estado { get; set; } = default!;
-        public DateTime FechaCreacion { get; set; }
-        public string UsuarioCreacion { get; set; } = default!;
+        public Boolean? Estado { get; set; } = default!;
+        public DateTime? FechaCreacion { get; set; }
+        public string? UsuarioCreacion { get; set; } = default!;
         public DateTime? FechaModificacion { get; set; }
         public string? UsuarioModificacion { get; set; }
+        public string? EstadoCita { get; set; }
+    }
+
+    public class CrearCita
+    {
+        public int? Id { get; set; }
+        public Cita? Cita { get; set; }
     }
 }

@@ -33,9 +33,9 @@ namespace ProcesoMedico.Aplicacion.Services
             var response = new List<HorariosMedico>();
             var dataReader = _repoHorario.GetHorariosMedico(input);
 
-            if(dataReader != null)
+            if (dataReader != null)
             {
-                if(dataReader.configMedico?.Any() == true)
+                if (dataReader.configMedico?.Any() == true)
                 {
                     response = dataReader.configMedico.Select(r => new HorariosMedico()
                     {
@@ -50,7 +50,7 @@ namespace ProcesoMedico.Aplicacion.Services
                     }).ToList();
                 }
 
-                if(dataReader.configSecuencia?.Any() == true)
+                if (dataReader.configSecuencia?.Any() == true)
                 {
                     response.ForEach(r =>
                     {
@@ -58,7 +58,7 @@ namespace ProcesoMedico.Aplicacion.Services
                     });
                 }
 
-                if(dataReader.configRango?.Any() == true)
+                if (dataReader.configRango?.Any() == true)
                 {
                     response.ForEach(r =>
                     {
@@ -66,18 +66,42 @@ namespace ProcesoMedico.Aplicacion.Services
 
                         r.HorarioLaboral = resultFechas.Select(a => new HorasLaborales()
                         {
-                         FechaFin = a.FechaFin,
-                         FechaInicio = a.FechaInicio,
-                         Hora = a.Hora,
-                         IdRango = a.IdRango,
-                         MedicoId = a.MedicoId,
-                         Nombre = a.Nombre
+                            FechaFin = a.FechaFin,
+                            FechaInicio = a.FechaInicio,
+                            Hora = a.Hora,
+                            IdRango = a.IdRango,
+                            MedicoId = a.MedicoId,
+                            Nombre = a.Nombre
+                        }).ToList();
+                    });
+                }
+
+                if (dataReader.citasMedico?.Any() == true)
+                {
+                    response.ForEach(r =>
+                    {
+                        var resultFechas = dataReader.citasMedico.Where(z => z.MedicoId == r.MedicoId).OrderBy(Z => Z.CitaId).ToList();
+
+                        r.Citas = resultFechas.Select(a => new CitasxMedico()
+                        {
+                            CitaId = a.CitaId,
+                            MedicoId = a.MedicoId,
+                            PacienteId = a.PacienteId,
+                            DescEstadoCita = a.DescEstadoCita,
+                            EstadoCita = a.EstadoCita,
+                            FechaCita = a.FechaCita,
+                            Motivo = a.Motivo
                         }).ToList();
                     });
                 }
             }
 
             return response;
+        }
+
+        public async Task<IEnumerable<Feriados>> GetFeriados(object? input)
+        {
+            return await _repoHorario.GetFeriados(input);
         }
     }
 }

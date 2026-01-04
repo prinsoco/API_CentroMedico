@@ -19,11 +19,13 @@ namespace ProcesoMedico.Dominio.Entities
         public DateTime? FechaFinalLaboral { get; set; } = default!;
         public List<string?> DiasAtencion { get; set; }
         public List<HorasLaborales> HorarioLaboral { get; set; }
+        public List<CitasxMedico> Citas { get; set; }
 
         public HorariosMedico()
         {
             DiasAtencion = new List<string?>();
             HorarioLaboral = new List<HorasLaborales>();
+            Citas = new List<CitasxMedico>();
         }
     }
 
@@ -42,12 +44,14 @@ namespace ProcesoMedico.Dominio.Entities
         public List<ConfigMedico> configMedico { get; set; }
         public List<ConfigSecuencia> configSecuencia { get; set; }
         public List<ConfigRango> configRango { get; set; }
+        public List<CitasxMedico> citasMedico { get; set; }
 
         public ConfiguracionHorario()
         {
             configMedico = new List<ConfigMedico>();
             configSecuencia = new List<ConfigSecuencia>();
             configRango = new List<ConfigRango>();
+            citasMedico = new List<CitasxMedico>();
         }
     }
 
@@ -82,5 +86,27 @@ namespace ProcesoMedico.Dominio.Entities
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         public int? HorarioId { get; set; }
+    }
+    
+    public class CitasxMedico
+    {
+        public int? CitaId { get; set; }
+        public int? MedicoId { get; set; }
+        public int? PacienteId { get; set; }
+        public DateTime? FechaCita { get; set; }
+        public string? Motivo { get; set; }
+        public string? EstadoCita { get; set; }
+        public string? DescEstadoCita { get; set; }
+    }
+
+    public class Feriados
+    {
+        public int? FeriadoId { get; set; }
+        public int? Anio { get; set; }
+        public int? Mes { get; set; }
+        public int? Dia { get; set; }
+        public string? Descripcion { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+        public string? UsuarioCreacion { get; set; }
     }
 }

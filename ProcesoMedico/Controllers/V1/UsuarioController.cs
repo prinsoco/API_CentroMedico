@@ -13,6 +13,13 @@ namespace ProcesoMedico.Api.Controllers.v1
         private readonly IUsuarioService _service;
         public UsuarioController(IUsuarioService service) => _service = service;
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest input)
+        {
+            var response = await _service.LoginPaciente(input);
+            return Ok(response == null ? new { Codigo = 9999, Mensaje = "Usuario o clave incorrectos" } : response);
+        }
+
         [HttpPost("crear")]
         public async Task<IActionResult> Create([FromBody] Usuario dto)
         {

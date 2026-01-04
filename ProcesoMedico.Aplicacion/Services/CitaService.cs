@@ -41,7 +41,7 @@ namespace ProcesoMedico.Aplicacion.Services
                 Cita.MedicoId,
                 Cita.FechaCita,
                 Cita.Motivo,
-                Cita.Estado,
+                Cita.EstadoCita,
                 Cita.UsuarioModificacion
             };
 

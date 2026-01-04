@@ -1,51 +1,59 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Services;
 using ProcesoMedico.Dominio.Entities;
+using ProcesoMedico.Dominio.Utils;
 
 namespace ProcesoMedico.Api.Controllers.v1
 {
     [ApiController]
-    [Route("api/cita")]
+    [Route("api/[controller]")]
     public class CitaController : ControllerBase
     {
         private readonly ICitaService _service;
         public CitaController(ICitaService service) => _service = service;
 
-        [HttpPost]
-        [Consumes("application/json")]
+        [HttpPost("crear")]
         public async Task<IActionResult> Create([FromBody] Cita dto)
         {
             var id = await _service.InsertCitaAsync(dto);
-            return id > 0 ? Ok(new { Code = "00", Mensaje = "Cita registrada con exito" }) : Ok(new { Code = "99", Mensaje = "Error al registro la cita" });
+            var response = new ResponseCreate()
+            {
+                Id = id,
+                Message = id > 0 ? "Cita registrada con exito" :  id == -9999 ? "El horario seleccionado no se encuentra disponible" : id == -1111 ? "Ya tiene una cita agendada para este día" : "Error al registro la cita"
+            };
+
+            return Ok(response);
         }
 
-        [HttpPut("{id:int}")]
-        [Consumes("application/json")]
-        public async Task<IActionResult> Update(int id, [FromBody] Cita dto)
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromBody] Cita dto)
         {
             var affected = await _service.UpdateCitaAsync(dto);
-            return Ok(new { Code = "00", Mensaje = "Registro actualizado" });
+            var response = new ResponseCreate()
+            {
+                Id = 0,
+                Message = "Cita editada con exito"
+            };
+            return Ok(response);
         }
 
-        [HttpGet("{id:int}")]
-        [Consumes("application/json")]
+        [HttpGet("getById/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var item = await _service.GetAsync(id);
             return item is null ? NotFound() : Ok(item);
         }
 
-        [HttpGet]
-        [Consumes("application/json")]
-        public async Task<IActionResult> GetAll([FromQuery] string? tipo, [FromQuery] string? codigo, [FromQuery] bool? estado)
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? combo, [FromHeader] int? medicoId = 0, [FromHeader] int? pacienteId = 0)
         {
-            var items = await _service.ListAsync(new { Tipo = tipo, Codigo = codigo, Estado = estado });
-            return Ok(items);
+            var items = await _service.ListAsync(new { Input = input, Combo = combo, MedicoId = medicoId, PacienteId = pacienteId });
+            return Ok(new ResponseDetails<List<Cita>>(items?.ToList()));
         }
 
-        [HttpGet("paged")]
-        [Consumes("application/json")]
+        [HttpGet("getPaged")]
         public async Task<IActionResult> GetPaged([FromQuery] string? tipo, [FromQuery] string? codigo, [FromQuery] bool? estado,
                                                   [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -53,8 +61,7 @@ namespace ProcesoMedico.Api.Controllers.v1
             return Ok(result);
         }
 
-        [HttpDelete("{id:int}")]
-        [Consumes("application/json")]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id, [FromQuery] string usuarioModificacion)
         {
             var affected = await _service.DeleteAsync(id, usuarioModificacion);

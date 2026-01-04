@@ -38,8 +38,18 @@ namespace ProcesoMedico.Infraestructura.Repositories
             response.configMedico = configData.Read<ConfigMedico>()?.ToList();
             response.configSecuencia = configData.Read<ConfigSecuencia>()?.ToList();
             response.configRango = configData.Read<ConfigRango>()?.ToList();
+            response.citasMedico = configData.Read<CitasxMedico>()?.ToList();
 
             return response;
+        }
+
+        public async Task<IEnumerable<Feriados>> GetFeriados(object? input)
+        {
+            var response = new ConfiguracionHorario();
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            return await conn.QueryAsync<Feriados>("sp_Feriado_GetAll", input, null, null, commandType: CommandType.StoredProcedure);
         }
     }
 }

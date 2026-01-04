@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Configuration;
 using ProcesoMedico.Aplicacion.Interfaces;
+using ProcesoMedico.Aplicacion.Utils;
 using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Infraestructura.Interfaces;
 //using Newtonsoft.Json;
@@ -15,12 +17,19 @@ namespace ProcesoMedico.Aplicacion.Services
     public class PacienteService : GenericService<Paciente>, IPacienteService
     {
         private readonly IGenericRepository<Paciente> _repo;
+        private readonly IAutRepository _aut;
         private readonly IConfiguration _configuration;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly IAuthTokenService _auttoken;
 
-        public PacienteService(IGenericRepository<Paciente> repo, IConfiguration configuration) : base(repo)
+        public PacienteService(IGenericRepository<Paciente> repo, IAutRepository aut, IConfiguration configuration,
+            IPasswordHasher passwordHasher, IAuthTokenService auttoken) : base(repo)
         {
             _repo = repo;
+            _aut = aut;
             _configuration = configuration;
+            _passwordHasher = passwordHasher;
+            _auttoken = auttoken;
         }
 
         public async Task<int> InsertPacienteAsync(Paciente Paciente)
@@ -67,20 +76,39 @@ namespace ProcesoMedico.Aplicacion.Services
             return await _repo.UpdateAsync(Paciente, spParams);
         }
 
-        public async Task<LoginPacienteResponse> LoginPaciente(LoginPacienteRequest input)
+        public async Task<LoginResponse> LoginPaciente(LoginRequest input)
         {
-            var responseLogin = new LoginPacienteResponse();
-            var spParams = new
+            Boolean mcaDobleFactor = false;
+            var usuario = await _aut.LoginAsync(input);
+            
+            if (usuario != null)
             {
-                Email = input.Email,
-                Clave = input.Clave
-            };
+                var verifiedPassword = _passwordHasher.VerifyHashedPassword(usuario.LoginClave ?? "", input.Clave ?? "");
+                if (verifiedPassword == PasswordVerificationResult.Failed)
+                {
+                    #region 401-C Password no valida
+                    //401-C Password no valida
+                    throw new InvalidOperationException("Credenciales no válidas");
+                    #endregion
+                }
 
-            var response = await _repo.LoginAsync(spParams);
-            /*if(response != null)
-            {
-                responseLogin = JsonConvert.DeserializeObject<LoginPacienteResponse>(JsonConvert.SerializeObject(response));
-            }*/
+                if(usuario.LoginExpToken?.ToString() == "0")
+                {
+                    mcaDobleFactor = true;
+                }
+
+                var tokenOutput = _auttoken.GenerateToken(usuario, true, false, mcaDobleFactor, "");
+
+                #region 200 Respuesta OK
+                //200 Respuesta OK
+                usuario.Time = tokenOutput.Time;
+                usuario.LastLogin = tokenOutput.LastLogin;
+                usuario.Token = tokenOutput.Token;
+                usuario.RefreshToken = tokenOutput.RefreshToken;
+
+                return usuario;
+                #endregion
+            }
 
             return null;
         }

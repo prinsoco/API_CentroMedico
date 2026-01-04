@@ -12,9 +12,8 @@ using System.Data;
 
 namespace ProcesoMedico.Infraestructura.Interfaces
 {
-    public interface IHorariosRepository
+    public interface IAutRepository
     {
-        ConfiguracionHorario GetHorariosMedico(object? input);
-        Task<IEnumerable<Feriados>> GetFeriados(object? input);
+        Task<LoginResponse> LoginAsync(LoginRequest input);
     }
 }

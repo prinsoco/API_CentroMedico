@@ -11,5 +11,6 @@ namespace ProcesoMedico.Aplicacion.Interfaces
     {
         Task<int> InsertMedicoAsync(Medico input);
         Task<int> UpdateMedicoAsync(Medico input);
+        Task<LoginResponse> LoginPaciente(LoginRequest login);
     }
 }

@@ -1,15 +1,33 @@
+using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using ProcesoMedico.Api.Middlewares;
 using ProcesoMedico.Aplicacion.Interfaces;
+using ProcesoMedico.Aplicacion.Interfaces.Seguridad;
 using ProcesoMedico.Aplicacion.Services;
+using ProcesoMedico.Aplicacion.Services.Seguridad;
+using ProcesoMedico.Aplicacion.Services.Seguridad.Settings;
+using ProcesoMedico.Aplicacion.Utils;
+using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Infraestructura.Interfaces;
 using ProcesoMedico.Infraestructura.Persistence;
 using ProcesoMedico.Infraestructura.Repositories;
+using ProcesoMedico.Infraestructura.Seguridad;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services.Configure<AuthenticationSettings>(
+    builder.Configuration.GetSection("AuthenticationSettings"));
+
+builder.Services.Configure<SecuritySettings>(
+    builder.Configuration.GetSection("SecuritySettings"));
+
+builder.Services.Configure<AppSettingModel.Main>(
+    builder.Configuration.GetSection("Settings"));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -27,6 +45,8 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 
 // Services (generic)
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+
+builder.Services.AddSingleton<IAppSettings, AppSettings>();
 
 // Controllers will request typed services via DI factory bindings:
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
@@ -52,6 +72,12 @@ builder.Services.AddScoped<IDatosCacheRepository, DatosCacheRepository>();
 builder.Services.AddScoped<IMemoryCache, MemoryCache>();
 builder.Services.AddScoped<IHorariosService, HorariosService>();
 builder.Services.AddScoped<IHorariosRepository, HorariosRepository>();
+builder.Services.AddScoped<IHorariosService, HorariosService>();
+builder.Services.AddScoped<IUnitOfWorkRepository, UnitOfWorkRepository>();
+builder.Services.AddScoped<IAuthTokenService, AuthTokenService>();
+builder.Services.AddScoped<ISettingManager, SettingManager>();
+builder.Services.AddScoped<IAutRepository, AutRepository>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 //ADD Cors
 var MyCors = "AllowAll";
