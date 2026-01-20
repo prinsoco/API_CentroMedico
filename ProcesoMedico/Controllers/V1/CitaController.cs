@@ -43,14 +43,14 @@ namespace ProcesoMedico.Api.Controllers.v1
         public async Task<IActionResult> GetById(int id)
         {
             var item = await _service.GetAsync(id);
-            return item is null ? NotFound() : Ok(item);
+            return Ok(new ResponseDetails<Cita>(item));
         }
 
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? combo, [FromHeader] int? medicoId = 0, [FromHeader] int? pacienteId = 0)
+        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? estadoCita, [FromHeader] string? combo = "N", [FromHeader] int? medicoId = 0, [FromHeader] int? pacienteId = 0, [FromHeader] string? fechaInicio = "", [FromHeader] string? fechaFin = "")
         {
-            var items = await _service.ListAsync(new { Input = input, Combo = combo, MedicoId = medicoId, PacienteId = pacienteId });
-            return Ok(new ResponseDetails<List<Cita>>(items?.ToList()));
+            var items = await _service.ListAsync(new { Input = input, Combo = combo, EstadoCita = estadoCita, MedicoId = medicoId, PacienteId = pacienteId, FechaInicio = string.IsNullOrEmpty(fechaInicio) ? null : fechaInicio, FechaFin = string.IsNullOrEmpty(fechaFin) ? null : fechaFin });
+            return Ok(new ResponseDetails<IEnumerable<Cita>>(items));
         }
 
         [HttpGet("getPaged")]

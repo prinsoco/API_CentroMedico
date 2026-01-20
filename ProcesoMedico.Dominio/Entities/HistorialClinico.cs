@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace ProcesoMedico.Dominio.Entities
 {
-    public class Cita
+    public class HistorialClinico
     {
-        public int? CitaId { get; set; }
+        public int? HistorialId { get; set; }
         public int? PacienteId { get; set; }
         public int? MedicoId { get; set; }
-        public DateTime? FechaCita { get; set; }
-        public string? Motivo { get; set; }
+        public int? CitaId { get; set; }
+        public string? Diagnostico { get; set; }
+        public string? Receta { get; set; }
         public Boolean? Estado { get; set; } = default!;
         public DateTime? FechaCreacion { get; set; }
         public string? UsuarioCreacion { get; set; } = default!;
@@ -23,11 +24,6 @@ namespace ProcesoMedico.Dominio.Entities
         public string? Medico { get; set; }
         public string? Especialidad { get; set; }
         public string? DescEstadoCita { get; set; }
-    }
-
-    public class CrearCita
-    {
-        public int? Id { get; set; }
-        public Cita? Cita { get; set; }
+        public string? DescHistorial { get; set; }
     }
 }

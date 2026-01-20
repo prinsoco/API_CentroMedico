@@ -78,6 +78,8 @@ builder.Services.AddScoped<IAuthTokenService, AuthTokenService>();
 builder.Services.AddScoped<ISettingManager, SettingManager>();
 builder.Services.AddScoped<IAutRepository, AutRepository>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IHistorialService, HistorialService>();
+
 
 //ADD Cors
 var MyCors = "AllowAll";

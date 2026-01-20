@@ -49,14 +49,14 @@ namespace ProcesoMedico.Api.Controllers.v1
         public async Task<IActionResult> GetById(int id)
         {
             var item = await _service.GetAsync(id);
-            return item is null ? NotFound() : Ok(item);
+            return Ok(new ResponseDetails<Paciente>(item));
         }
 
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? combo)
         {
             var items = await _service.ListAsync(new { Input = input, Combo = combo });
-            return Ok(new ResponseDetails<List<Paciente>>(items?.ToList()));
+            return Ok(new ResponseDetails<IEnumerable<Paciente>>(items));
         }
 
         [HttpGet("getPaged")]
