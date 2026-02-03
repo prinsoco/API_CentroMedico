@@ -13,6 +13,8 @@ namespace ProcesoMedico.Dominio.Entities
         public string? Codigo { get; set; } = default!;
         public string? Descripcion { get; set; } = default!;
         public bool Estado { get; set; } = true;
+        public DateTime FechaCreacion { get; set; }
+        public DateTime FechaModificacion { get; set; }
         public string? UsuarioCreacion { get; set; } = default!;
         public string? UsuarioModificacion { get; set; } = default!;
     }

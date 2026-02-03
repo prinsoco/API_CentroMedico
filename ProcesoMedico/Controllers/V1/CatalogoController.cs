@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProcesoMedico.Api.Documentacion;
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Services;
 using ProcesoMedico.Dominio.Entities;
-using Swashbuckle.AspNetCore.Filters;
+using ProcesoMedico.Dominio.Utils;
 
 namespace ProcesoMedico.Api.Controllers.v1
 {
@@ -14,43 +13,46 @@ namespace ProcesoMedico.Api.Controllers.v1
         private readonly ICatalogoService _service;
         public CatalogoController(ICatalogoService service) => _service = service;
 
-
         [HttpPost("crear")]
-        [Consumes("application/json")]
-        [SwaggerRequestExample(typeof(Catalogo), typeof(CrearCatalogoExample))]
         public async Task<IActionResult> Create([FromBody] Catalogo dto)
         {
             var id = await _service.InsertCatalogoAsync(dto);
-            return id > 0 ? Ok(new { Code = "00", Mensaje = "Catalogo registrado con exito" }) : Ok(new { Code = "99", Mensaje = "Error al registro el catalogo" });
+            var response = new ResponseCreate()
+            {
+                Id = id,
+                Message = id > 0 ? "Catalogo registrado con exito" : "Error al registrar el catalogo"
+            };
+
+            return Ok(response);
         }
 
         [HttpPut("update")]
-        [Consumes("application/json")]
-        [SwaggerRequestExample(typeof(Catalogo), typeof(UpdateCatalogoExample))]
         public async Task<IActionResult> Update([FromBody] Catalogo dto)
         {
             var affected = await _service.UpdateCatalogoAsync(dto);
-            return Ok(new { Code = "00", Mensaje = "Registro actualizado" });
+            var response = new ResponseCreate()
+            {
+                Id = affected,
+                Message = affected > 0 ? "Catalogo editado con exito" : "Error al editar el catalogo"
+            };
+            return Ok(response);
         }
 
-        [HttpGet("getBydId/{id:int}")]
-        [Consumes("application/json")]
+        [HttpGet("getById/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var item = await _service.GetAsync(id);
-            return item is null ? NotFound() : Ok(item);
+            return Ok(new ResponseDetails<Catalogo>(item));
         }
 
         [HttpGet("getAll")]
-        [Consumes("application/json")]
-        public async Task<IActionResult> GetAll([FromQuery] string? tipo, [FromQuery] string? codigo, [FromQuery] bool? estado)
+        public async Task<IActionResult> GetAll([FromHeader] string? codigo, [FromHeader] string? combo, [FromHeader] string? tipo, [FromHeader] string? estado)
         {
-            var items = await _service.ListAsync(new { Tipo = tipo, Codigo = codigo, Estado = estado });
-            return Ok(items);
+            var items = await _service.ListAsync(new { Codigo = codigo, Combo = combo, Tipo = tipo, Estado = string.IsNullOrEmpty(estado) ? false : true });
+            return Ok(new ResponseDetails<IEnumerable<Catalogo>>(items));
         }
 
         [HttpGet("getPaged")]
-        [Consumes("application/json")]
         public async Task<IActionResult> GetPaged([FromQuery] string? tipo, [FromQuery] string? codigo, [FromQuery] bool? estado,
                                                   [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -59,11 +61,18 @@ namespace ProcesoMedico.Api.Controllers.v1
         }
 
         [HttpDelete("delete/{id:int}")]
-        [Consumes("application/json")]
         public async Task<IActionResult> Delete(int id, [FromQuery] string usuarioModificacion)
         {
             var affected = await _service.DeleteAsync(id, usuarioModificacion);
             return affected > 0 ? Ok(affected) : NotFound();
+        }
+
+        //validar usuario
+        [HttpGet("getByUser")]
+        public async Task<IActionResult> GetByUser([FromHeader] string? user)
+        {
+            var item = await _service.GetUserAsync(user);
+            return Ok(new ResponseDetails<Catalogo>(item));
         }
     }
 }

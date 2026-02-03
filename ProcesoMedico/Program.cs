@@ -79,6 +79,9 @@ builder.Services.AddScoped<ISettingManager, SettingManager>();
 builder.Services.AddScoped<IAutRepository, AutRepository>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IHistorialService, HistorialService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<ISubMenuService, SubMenuService>();
+builder.Services.AddScoped<IFrontRepository, FrontRepository>();
 
 
 //ADD Cors

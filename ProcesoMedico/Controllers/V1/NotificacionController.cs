@@ -46,10 +46,10 @@ namespace ProcesoMedico.Api.Controllers.v1
         }
 
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll([FromHeader] string? input)
+        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? combo)
         {
-            var items = await _service.ListAsync(new { Input = input });
-            return Ok(new ResponseDetails<List<Notificacion>>(items?.ToList()));
+            var items = await _service.ListAsync(new { Input = string.IsNullOrEmpty(input) ? null : input, Combo = string.IsNullOrEmpty(combo) ? null : combo });
+            return Ok(new ResponseDetails<IEnumerable<Notificacion>>(items));
         }
 
         [HttpGet("getPaged")]

@@ -40,7 +40,8 @@ namespace ProcesoMedico.Infraestructura.Repositories
             using var conn = _context.CreateConnection();
             conn.Open();
             var parameters = spParams ?? entity;
-            int rsgistro = conn.ExecuteAsync(Sp("Update"), parameters, commandType: CommandType.StoredProcedure).Result;
+            int rsgistro = conn.ExecuteScalarAsync<int>(Sp("Update"), parameters, commandType: CommandType.StoredProcedure).Result;
+
             return rsgistro;
         }
 

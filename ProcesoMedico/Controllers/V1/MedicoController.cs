@@ -49,7 +49,7 @@ namespace ProcesoMedico.Api.Controllers.v1
         public async Task<IActionResult> GetById(int id)
         {
             var item = await _service.GetAsync(id);
-            return item is null ? NotFound() : Ok(item);
+            return Ok(new ResponseDetails<Medico>(item));
         }
 
         [HttpGet("getAll")]

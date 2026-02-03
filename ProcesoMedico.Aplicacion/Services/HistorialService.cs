@@ -21,8 +21,6 @@ namespace ProcesoMedico.Aplicacion.Services
         {
             var spParams = new
             {
-                input.PacienteId,
-                input.MedicoId,
                 input.CitaId,
                 input.Diagnostico,
                 input.Receta,
