@@ -27,6 +27,7 @@ namespace ProcesoMedico.Infraestructura.Repositories
         public async Task<IEnumerable<DatosCahe.CacheParametros>> GetParametros()
         {
             using var conn = _context.CreateConnection();
+            conn.Open();
             return await conn.QueryAsync<DatosCahe.CacheParametros>(Sp("Parametros"), null, commandType: CommandType.StoredProcedure);
         }
     }

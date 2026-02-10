@@ -106,9 +106,9 @@ namespace ProcesoMedico.Api.Controllers.v1
         }
 
         [HttpGet("getAll/submenu")]
-        public async Task<IActionResult> GetAllSub([FromHeader] string? input, [FromHeader] string? combo)
+        public async Task<IActionResult> GetAllSub([FromHeader] string? input, [FromHeader] string? combo, [FromHeader] string? menuId)
         {
-            var items = await _servSubmenu.ListAsync(new { Input = input, Combo = combo });
+            var items = await _servSubmenu.ListAsync(new { Input = input, Combo = combo, MenuId = string.IsNullOrEmpty(menuId) ? 0 : int.Parse(menuId) });
             return Ok(new ResponseDetails<IEnumerable<SubMenu>>(items));
         }
 
@@ -129,9 +129,9 @@ namespace ProcesoMedico.Api.Controllers.v1
         #endregion
 
         [HttpGet("getMenuFront")]
-        public async Task<IActionResult> GetMenuFront()
+        public async Task<IActionResult> GetMenuFront([FromHeader] string? perfilId)
         {
-            var items = await _service.GetMenuFrontAsync();
+            var items = await _service.GetMenuFrontAsync(new { PerfilId = string.IsNullOrEmpty(perfilId) ? 0 : int.Parse(perfilId) });
             return Ok(new ResponseDetails<IEnumerable<RouteInfo>>(items));
         }
     }

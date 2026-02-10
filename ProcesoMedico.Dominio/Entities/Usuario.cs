@@ -26,5 +26,6 @@ namespace ProcesoMedico.Dominio.Entities
         public DateTime? FechaModificacion { get; set; }
         public string? UsuarioModificacion { get; set; }
         public string? CodPerfil { get; set; }
+        public string? Clave { get; set; }
     }
 }

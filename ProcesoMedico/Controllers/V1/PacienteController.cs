@@ -3,6 +3,12 @@ using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Services;
 using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Dominio.Utils;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.Kernel.Font;
+using iText.IO.Font.Constants;
 
 namespace ProcesoMedico.Api.Controllers.v1
 {
@@ -11,7 +17,12 @@ namespace ProcesoMedico.Api.Controllers.v1
     public class PacienteController : ControllerBase
     {
         private readonly IPacienteService _service;
-        public PacienteController(IPacienteService service) => _service = service;
+        private readonly IMailService _mail;
+        public PacienteController(IPacienteService service, IMailService mail) 
+        { 
+            _service = service;
+            _mail = mail;
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest input)
@@ -27,7 +38,7 @@ namespace ProcesoMedico.Api.Controllers.v1
             var response = new ResponseCreate()
             {
                 Id = id,
-                Message = id > 0 ? "Paciente registrado con exito" : "Error al registro el paciente"
+                Message = id == -1 ? "Pacientes ya existe" : id > 0 ? "Paciente registrado con exito" : "Error al registro el paciente"
             };
                 
             return Ok(response);
@@ -53,7 +64,7 @@ namespace ProcesoMedico.Api.Controllers.v1
         }
 
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? combo)
+        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? combo, [FromHeader] string? especialidadId, [FromHeader] string? medicoId, [FromHeader] string? reporte)
         {
             var items = await _service.ListAsync(new { Input = input, Combo = combo });
             return Ok(new ResponseDetails<IEnumerable<Paciente>>(items));
@@ -80,6 +91,87 @@ namespace ProcesoMedico.Api.Controllers.v1
         {
             var item = await _service.GetUserAsync(user);
             return Ok(new ResponseDetails<Paciente>(item));
+        }
+
+        [HttpPost("getDownload")]
+        public async Task<IActionResult> GetDownload([FromBody] FiltroExcel filtro)
+        {
+            var items = await _service.ReportePacienteAsync(new { EspecialidadId = int.Parse(string.IsNullOrEmpty(filtro.EspecialidadId) ? "0" : filtro.EspecialidadId), MedicoId = int.Parse(string.IsNullOrEmpty(filtro.MedicoId) ? "0" : filtro.MedicoId), Reporte = filtro.Reporte });
+            if (filtro.Download)
+            {
+                // 🔹 Textos dinámicos
+                string especialidadTexto = string.IsNullOrEmpty(filtro.DescEspecialidad)
+                    ? "-- Todos --"
+                    : filtro.DescEspecialidad;
+
+                string medicoTexto = string.IsNullOrEmpty(filtro.DescMedico)
+                    ? "-- Todos --"
+                    : filtro.DescMedico;
+
+                using var ms = new MemoryStream();
+
+                var writer = new PdfWriter(ms);
+                var pdf = new PdfDocument(writer);
+                var document = new Document(pdf);
+
+                // Fuente
+                PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                PdfFont bold = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+
+                // 📌 TÍTULO
+                document.Add(new Paragraph("REPORTE DE PACIENTES")
+                    .SetFont(bold)
+                    .SetFontSize(16)
+                    .SetTextAlignment(TextAlignment.CENTER)
+                    .SetMarginBottom(20));
+
+                // 📍 FILTROS
+                document.Add(new Paragraph()
+                    .Add(new Text("Especialidad: ").SetFont(bold))
+                    .Add(new Text(especialidadTexto).SetFont(font))
+                    .SetMarginBottom(3));
+
+                document.Add(new Paragraph()
+                    .Add(new Text("Médico: ").SetFont(bold))
+                    .Add(new Text(medicoTexto).SetFont(font))
+                    .SetMarginBottom(15));
+
+                // 📊 TABLA (3 columnas)
+                Table table = new Table(5).UseAllAvailableWidth();
+
+                // Encabezados
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Nombres").SetFont(bold)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Identificación").SetFont(bold)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Email").SetFont(bold)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Teléfono").SetFont(bold)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Celular").SetFont(bold)));
+
+                // Datos
+                foreach (var item in items)
+                {
+                    table.AddCell(new Paragraph(item.Nombres ?? ""));
+                    table.AddCell(new Paragraph(item.Identificacion ?? ""));
+                    table.AddCell(new Paragraph(item.Email ?? ""));
+                    table.AddCell(new Paragraph(item.Telefono ?? ""));
+                    table.AddCell(new Paragraph(item.Celular ?? ""));
+                }
+
+                document.Add(table);
+                document.Close();
+
+                return File(ms.ToArray(), "application/pdf", "Pacientes.pdf");
+            }
+            else
+            {
+                return Ok(new ResponseDetails<IEnumerable<Paciente>>(items));
+            }
+        }
+        
+        [HttpPost("email")]
+        public async Task<IActionResult> Email([FromBody] string? puerto)
+        {
+            var response = await _mail.EnviarEmail(null);
+            return Ok(response);
         }
     }
 }

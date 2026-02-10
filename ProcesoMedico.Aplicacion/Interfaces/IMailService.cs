@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProcesoMedico.Aplicacion.Interfaces
 {
-    public interface ICitaService : IGenericService<Cita>
+    public interface IMailService 
     {
-        Task<int> InsertCitaAsync(Cita input);
-        Task<int> UpdateCitaAsync(Cita input);
-        Task<IEnumerable<Cita>> ReporteCitaAsync(object input);
+        Task<bool> EnviarEmail(MailRequest mail);
     }
 }

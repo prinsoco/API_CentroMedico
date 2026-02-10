@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Utils;
 using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Infraestructura.Interfaces;
+using ProcesoMedico.Infraestructura.Seguridad;
 
 namespace ProcesoMedico.Aplicacion.Services
 {
@@ -19,19 +21,25 @@ namespace ProcesoMedico.Aplicacion.Services
         private readonly IAutRepository _aut;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IAuthTokenService _auttoken;
+        private readonly IUnitOfWorkRepository _unitofWork;
+        private readonly IMailService _mail;
 
         public UsuarioService(IGenericRepository<Usuario> repo, IAutRepository aut, IConfiguration configuration,
-            IPasswordHasher passwordHasher, IAuthTokenService auttoken) : base(repo)
+            IPasswordHasher passwordHasher, IAuthTokenService auttoken,
+            IUnitOfWorkRepository unitofWork, IMailService mail) : base(repo)
         {
             _repo = repo;
             _aut = aut;
             _configuration = configuration;
             _passwordHasher = passwordHasher;
             _auttoken = auttoken;
+            _unitofWork = unitofWork;
+            _mail = mail;
         }
 
         public async Task<int> InsertUsuarioAsync(Usuario Usuario)
         {
+            string claveHash = _passwordHasher.HashPassword(Usuario.Clave);
             var spParams = new
             {
                 Usuario.PerfilId,
@@ -46,10 +54,18 @@ namespace ProcesoMedico.Aplicacion.Services
                 Usuario.Direccion,
                 Usuario.Estado,
                 Usuario.UsuarioCreacion,
-                CodPerfil = $"{_configuration["Parametros:PerfilUsuarios"]}"
+                CodPerfil = $"{_configuration["Parametros:PerfilUsuarios"]}",
+                Clave = claveHash
             };
 
-            return await _repo.InsertAsync(Usuario, spParams);
+            int result = _repo.InsertAsync(Usuario, spParams).GetAwaiter().GetResult();
+
+            if (result > 0)
+            {
+                generarNotificacion(Usuario, $"{_configuration["Notificacion:Insertar"]}", $"{_configuration["Notificacion:Codigo"]}", $"{_configuration["Parametros:CodLoginAdmin"]}");
+            }
+
+            return result;
         }
 
         public async Task<int> UpdateUsuarioAsync(Usuario Usuario)
@@ -110,5 +126,46 @@ namespace ProcesoMedico.Aplicacion.Services
 
             return null;
         }
+
+        #region Privados
+        private void generarNotificacion(Usuario Paciente, string tipo, string codigo, string url)
+        {
+            //Notificaciones
+            var notificacion = _unitofWork.Notificaciones(new { Combo = "S" }).GetAwaiter().GetResult();
+
+            //Parametros email
+            var param = _unitofWork.Parametros(new { Combo = "S", Tipo = "EmailSettings" }).GetAwaiter().GetResult();
+
+            //parametro login
+            var paramLogin = _unitofWork.Parametros(new { Combo = "S", Tipo = "NewUser", Codigo = url }).GetAwaiter().GetResult();
+
+            var request = new MailRequest();
+
+            //plantilla
+            request.Body = notificacion.Where(x => x.Codigo == codigo && x.Tipo == tipo)?.FirstOrDefault()?.Plantilla;
+            request.Parametros = param.Select(x => new ParametrosEmail
+            {
+                Nombre = x.Codigo,
+                Valor = x.Valor
+            }).ToList();
+            request.Recipients = new List<Recipient>()
+            {
+                new Recipient()
+                {
+                    To = Paciente.Email,
+                    ToName = string.Format("{0} {1}", Paciente.Nombres, Paciente.Apellidos)
+                }
+            };
+            request.Subject = "Notificación de registro";
+            request.Json = JsonConvert.SerializeObject(new
+            {
+                NombreCliente = string.Format("{0} {1}", Paciente.Nombres, Paciente.Apellidos),
+                UrlLogin = paramLogin?.FirstOrDefault()?.Valor,
+                AnioActual = DateTime.Now.Year
+            });
+            _mail.EnviarEmail(request);
+
+        }
+        #endregion
     }
 }

@@ -3,6 +3,12 @@ using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Services;
 using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Dominio.Utils;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.Kernel.Font;
+using iText.IO.Font.Constants;
 
 namespace ProcesoMedico.Api.Controllers.v1
 {
@@ -53,7 +59,8 @@ namespace ProcesoMedico.Api.Controllers.v1
         }
 
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? especialidadId, [FromHeader] string? combo, [FromHeader] string? identificacion)
+        public async Task<IActionResult> GetAll([FromHeader] string? input, [FromHeader] string? especialidadId, [FromHeader] string? combo, [FromHeader] string? identificacion,
+            [FromHeader] string? medicoId, [FromHeader] string? reporte)
         {
             var items = await _service.ListAsync(new { Input = input, EspecialidadId = int.Parse(string.IsNullOrEmpty(especialidadId) ? "0" : especialidadId), Identificacion = identificacion, Combo = combo });
             return Ok(new ResponseDetails<IEnumerable<Medico>>(items));
@@ -80,6 +87,73 @@ namespace ProcesoMedico.Api.Controllers.v1
         {
             var item = await _service.GetUserAsync(user);
             return Ok(new ResponseDetails<Medico>(item));
+        }
+
+        [HttpPost("getDownload")]
+        public async Task<IActionResult> GetDownload([FromBody] FiltroExcel filtro)
+        {
+            var items = await _service.ReporteMedicoAsync(new { EspecialidadId = int.Parse(string.IsNullOrEmpty(filtro.EspecialidadId) ? "0" : filtro.EspecialidadId), MedicoId = int.Parse(string.IsNullOrEmpty(filtro.MedicoId) ? "0" : filtro.MedicoId), Reporte = filtro.Reporte });
+            if (filtro.Download)
+            {
+                // 🔹 Textos dinámicos
+                string especialidadTexto = string.IsNullOrEmpty(filtro.DescEspecialidad)
+                ? "-- Todos --"
+                : filtro.DescEspecialidad;
+
+                using var ms = new MemoryStream();
+
+                var writer = new PdfWriter(ms);
+                var pdf = new PdfDocument(writer);
+                var document = new Document(pdf);
+
+                // Fuente
+                PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                PdfFont bold = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+
+                // 📌 TÍTULO
+                document.Add(new Paragraph("REPORTE DE MEDICOS")
+                    .SetFont(bold)
+                    .SetFontSize(16)
+                    .SetTextAlignment(TextAlignment.CENTER)
+                    .SetMarginBottom(20));
+
+                // 📍 FILTROS
+                document.Add(new Paragraph()
+                    .Add(new Text("Especialidad: ").SetFont(bold))
+                    .Add(new Text(especialidadTexto).SetFont(font))
+                    .SetMarginBottom(3));
+
+                // 📊 TABLA (3 columnas)
+                Table table = new Table(6).UseAllAvailableWidth();
+
+                // Encabezados
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Nombres").SetFont(bold)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Identificación").SetFont(bold)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Especialidad").SetFont(bold)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Email").SetFont(bold)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Teléfono").SetFont(bold)));
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Celular").SetFont(bold)));
+
+                // Datos
+                foreach (var item in items)
+                {
+                    table.AddCell(new Paragraph(item.Nombres ?? ""));
+                    table.AddCell(new Paragraph(item.Identificacion ?? ""));
+                    table.AddCell(new Paragraph(item.DescEspecialidad ?? ""));
+                    table.AddCell(new Paragraph(item.Email ?? ""));
+                    table.AddCell(new Paragraph(item.Telefono ?? ""));
+                    table.AddCell(new Paragraph(item.Celular ?? ""));
+                }
+
+                document.Add(table);
+                document.Close();
+
+                return File(ms.ToArray(), "application/pdf", "Medicos.pdf");
+            }
+            else
+            {
+                return Ok(new ResponseDetails<IEnumerable<Medico>>(items));
+            }
         }
     }
 }

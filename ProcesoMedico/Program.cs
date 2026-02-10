@@ -82,6 +82,7 @@ builder.Services.AddScoped<IHistorialService, HistorialService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<ISubMenuService, SubMenuService>();
 builder.Services.AddScoped<IFrontRepository, FrontRepository>();
+builder.Services.AddScoped<IMailService, MailService>();
 
 
 //ADD Cors
@@ -102,11 +103,11 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseCors(MyCors);
 app.UseHttpsRedirection();

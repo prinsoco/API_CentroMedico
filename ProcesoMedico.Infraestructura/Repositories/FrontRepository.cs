@@ -27,13 +27,13 @@ namespace ProcesoMedico.Infraestructura.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<RouteInfo>> GetMenuFrontAsync()
+        public async Task<IEnumerable<RouteInfo>> GetMenuFrontAsync(object param)
         {
             var response = new List<RouteInfo>();
             using var conn = _context.CreateConnection();
             conn.Open();
             
-            var configData = conn.QueryMultiple("sp_MenuFront_GetAll", null, null, null, commandType: CommandType.StoredProcedure);
+            var configData = conn.QueryMultiple("sp_MenuFront_GetAll", param, null, null, commandType: CommandType.StoredProcedure);
 
             var routerinfo = configData.Read<RouteInfo>()?.ToList();
             var childitems = configData.Read<ChildrenItems>()?.ToList();
@@ -49,6 +49,36 @@ namespace ProcesoMedico.Infraestructura.Repositories
                         .ToList();
 
             return response.AsEnumerable();
+        }
+        
+        public async Task<IEnumerable<Paciente>> ReportePacienteAsync(object param)
+        {
+            using var conn = _context.CreateConnection();
+            conn.Open();
+            
+            var configData = await conn.QueryAsync<Paciente>("sp_Reporte_GetAll", param, null, null, commandType: CommandType.StoredProcedure);
+
+            return configData;
+        }
+        
+        public async Task<IEnumerable<Medico>> ReporteMedicoAsync(object param)
+        {
+            using var conn = _context.CreateConnection();
+            conn.Open();
+            
+            var configData = await conn.QueryAsync<Medico>("sp_Reporte_GetAll", param, null, null, commandType: CommandType.StoredProcedure);
+
+            return configData;
+        }
+        
+        public async Task<IEnumerable<Cita>> ReporteCitaAsync(object param)
+        { 
+            using var conn = _context.CreateConnection();
+            conn.Open();
+            
+            var configData = await conn.QueryAsync<Cita>("sp_Reporte_GetAll", param, null, null, commandType: CommandType.StoredProcedure);
+
+            return configData;
         }
     }
 }

@@ -29,5 +29,6 @@ namespace ProcesoMedico.Dominio.Entities
         public string? UsuarioModificacion { get; set; }
         public string? CodPerfil { get; set; }
         public string? CodEspecialidad { get; set; }
+        public string? Clave { get; set; }
     }
 }

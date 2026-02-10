@@ -11,6 +11,6 @@ namespace ProcesoMedico.Aplicacion.Interfaces
     {
         Task<int> InsertMenuAsync(Menu input);
         Task<int> UpdateMenuAsync(Menu input);
-        Task<IEnumerable<RouteInfo>> GetMenuFrontAsync();
+        Task<IEnumerable<RouteInfo>> GetMenuFrontAsync(object param);
     }
 }

@@ -12,6 +12,9 @@ namespace ProcesoMedico.Infraestructura.Interfaces
 {
     public interface IFrontRepository
     {
-        Task<IEnumerable<RouteInfo>> GetMenuFrontAsync();
+        Task<IEnumerable<RouteInfo>> GetMenuFrontAsync(object param);
+        Task<IEnumerable<Paciente>> ReportePacienteAsync(object param);
+        Task<IEnumerable<Medico>> ReporteMedicoAsync(object param);
+        Task<IEnumerable<Cita>> ReporteCitaAsync(object param);
     }
 }

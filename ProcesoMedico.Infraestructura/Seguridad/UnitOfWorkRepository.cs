@@ -44,5 +44,37 @@ namespace ProcesoMedico.Infraestructura.Seguridad
                 throw new Exception("error-> UsuarioRepository::SetLastLogin", e);
             }
         }
+
+        public async Task<IEnumerable<Notificacion>> Notificaciones(object param)
+        {
+            var response = new ConfiguracionHorario();
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            try
+            {
+                return await conn.QueryAsync<Notificacion>("sp_Notificacion_GetAll", param, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("error-> UsuarioRepository::SetLastLogin", e);
+            }
+        }
+        
+        public async Task<IEnumerable<Parametros>> Parametros(object param)
+        {
+            var response = new ConfiguracionHorario();
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            try
+            {
+                return await conn.QueryAsync<Parametros>("sp_Parametros_GetAll", param, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("error-> IUnitOfWorkRepository::Parametros", e);
+            }
+        }
     }
 }

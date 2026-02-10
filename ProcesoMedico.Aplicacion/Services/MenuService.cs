@@ -67,9 +67,9 @@ namespace ProcesoMedico.Aplicacion.Services
             return await _repo.UpdateAsync(input, spParams);
         }
         
-        public async Task<IEnumerable<RouteInfo>> GetMenuFrontAsync()
+        public async Task<IEnumerable<RouteInfo>> GetMenuFrontAsync(object param)
         {
-            return await _front.GetMenuFrontAsync();
+            return await _front.GetMenuFrontAsync(param);
         }
     }
 }

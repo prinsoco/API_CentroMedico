@@ -21,8 +21,9 @@ namespace ProcesoMedico.Aplicacion.Services
         {
             var spParams = new
             {
-                Asignacion.RolId,
-                Asignacion.UsuarioId,
+                Asignacion.PerfilId,
+                Asignacion.MenuId,
+                Asignacion.SubMenuId,
                 Asignacion.Estado,
                 Asignacion.UsuarioCreacion
             };
@@ -35,8 +36,9 @@ namespace ProcesoMedico.Aplicacion.Services
             var spParams = new
             {
                 Asignacion.AsignarId,
-                Asignacion.RolId,
-                Asignacion.UsuarioId,
+                Asignacion.PerfilId,
+                Asignacion.MenuId,
+                Asignacion.SubMenuId,
                 Asignacion.Estado,
                 Asignacion.UsuarioModificacion
             };

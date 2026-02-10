@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.Configuration;
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Utils;
 using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Infraestructura.Interfaces;
-//using Newtonsoft.Json;
+using ProcesoMedico.Infraestructura.Seguridad;
+using Newtonsoft.Json;
 
 namespace ProcesoMedico.Aplicacion.Services
 {
@@ -21,19 +16,27 @@ namespace ProcesoMedico.Aplicacion.Services
         private readonly IConfiguration _configuration;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IAuthTokenService _auttoken;
+        private readonly IFrontRepository _frontReport;
+        private readonly IUnitOfWorkRepository _unitofWork;
+        private readonly IMailService _mail;
 
         public PacienteService(IGenericRepository<Paciente> repo, IAutRepository aut, IConfiguration configuration,
-            IPasswordHasher passwordHasher, IAuthTokenService auttoken) : base(repo)
+            IPasswordHasher passwordHasher, IAuthTokenService auttoken, IFrontRepository frontReport,
+            IUnitOfWorkRepository unitofWork, IMailService mail) : base(repo)
         {
             _repo = repo;
             _aut = aut;
             _configuration = configuration;
             _passwordHasher = passwordHasher;
             _auttoken = auttoken;
+            _frontReport = frontReport;
+            _unitofWork = unitofWork;
+            _mail = mail;
         }
 
         public async Task<int> InsertPacienteAsync(Paciente Paciente)
         {
+            string claveHash = _passwordHasher.HashPassword(Paciente.Clave);
             var spParams = new
             {
                 Paciente.PerfilId,
@@ -48,10 +51,18 @@ namespace ProcesoMedico.Aplicacion.Services
                 Paciente.Direccion,
                 Paciente.Estado,
                 Paciente.UsuarioCreacion,
+                Clave = claveHash,
                 CodPerfil = $"{_configuration["Parametros:PerfilPaciente"]}"
             };
 
-            return await _repo.InsertAsync(Paciente, spParams);
+            int result = _repo.InsertAsync(Paciente, spParams).GetAwaiter().GetResult();
+
+            if(result > 0)
+            {
+                generarNotificacion(Paciente, $"{_configuration["Notificacion:Insertar"]}", $"{_configuration["Notificacion:Codigo"]}", $"{_configuration["Parametros:CodLogin"]}");
+            }
+
+            return result;
         }
 
         public async Task<int> UpdatePacienteAsync(Paciente Paciente)
@@ -112,5 +123,47 @@ namespace ProcesoMedico.Aplicacion.Services
 
             return null;
         }
+        
+        public async Task<IEnumerable<Paciente>> ReportePacienteAsync(object input)
+        {
+            return await _frontReport.ReportePacienteAsync(input);
+        }
+
+        #region Privados
+        private void generarNotificacion(Paciente Paciente, string tipo, string codigo, string url)
+        {
+            //Notificaciones
+            var notificacion = _unitofWork.Notificaciones(new { Combo = "S" }).GetAwaiter().GetResult();
+
+            //Parametros email
+            var param = _unitofWork.Parametros(new { Combo = "S", Tipo = "EmailSettings"  }).GetAwaiter().GetResult();
+
+            //parametro login
+            var paramLogin = _unitofWork.Parametros(new { Combo = "S", Tipo = "NewUser", Codigo = url }).GetAwaiter().GetResult();
+
+            var request = new MailRequest();
+
+            //plantilla
+            request.Body = notificacion.Where(x => x.Codigo == codigo && x.Tipo == tipo)?.FirstOrDefault()?.Plantilla;
+            request.Parametros = param.Select(x => new ParametrosEmail
+            {
+                Nombre = x.Codigo,
+                Valor = x.Valor
+            }).ToList();
+            request.Recipients = new List<Recipient>()
+            {
+                new Recipient()
+                {
+                    To = Paciente.Email,
+                    ToName = string.Format("{0} {1}", Paciente.Nombres, Paciente.Apellidos)
+                }
+            };
+            request.Subject = "Notificación de registro";
+            request.Json = JsonConvert.SerializeObject(new { NombreCliente = string.Format("{0} {1}", Paciente.Nombres, Paciente.Apellidos), UrlLogin = paramLogin?.FirstOrDefault()?.Valor,
+                AnioActual = DateTime.Now.Year});
+            _mail.EnviarEmail(request);
+
+        }
+        #endregion
     }
 }
