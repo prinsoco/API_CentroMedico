@@ -87,7 +87,7 @@ namespace ProcesoMedico.Dominio.Entities
         public DateTime? FechaFin { get; set; }
         public int? HorarioId { get; set; }
     }
-    
+
     public class CitasxMedico
     {
         public int? CitaId { get; set; }
@@ -108,5 +108,20 @@ namespace ProcesoMedico.Dominio.Entities
         public string? Descripcion { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string? UsuarioCreacion { get; set; }
+    }
+
+    public class CitaPaciente
+    {
+        public string? Codigo { get; set; }
+        public string? Mensaje { get; set; }
+        public string? FechaCita { get; set; }
+        public string? Medico { get; set; }
+        public string? Especialidad { get; set; }
+    }
+    
+    public class EspecialidadWS
+    {
+        public int? EspecialidadId { get; set; }
+        public string? Especialidad { get; set; }
     }
 }

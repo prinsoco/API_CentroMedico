@@ -51,5 +51,46 @@ namespace ProcesoMedico.Infraestructura.Repositories
 
             return await conn.QueryAsync<Feriados>("sp_Feriado_GetAll", input, null, null, commandType: CommandType.StoredProcedure);
         }
+
+        public async Task<CitaPaciente> GetCita(object? input)
+        {
+            var respCita = new CitaPaciente();
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            var response = conn.QueryFirstAsync<CitaPaciente>("sp_CitaPaciente", input, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
+            if(response != null)
+            {
+                respCita.Codigo = string.IsNullOrEmpty(response.Codigo) ? "0000" : response.Codigo;
+                respCita.Mensaje = string.IsNullOrEmpty(response.Mensaje) ? "" : response.Mensaje;
+                respCita.Medico = string.IsNullOrEmpty(response.Medico) ? "" : response.Medico;
+                respCita.FechaCita = string.IsNullOrEmpty(response.FechaCita) ? "" : response.FechaCita;
+                respCita.Especialidad = string.IsNullOrEmpty(response.Especialidad) ? "" : response.Especialidad;
+            }
+            return respCita;
+        }
+        
+        public async Task<IEnumerable<EspecialidadWS>> GetEspecialidad()
+        {
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            var response = conn.QueryAsync<EspecialidadWS>("sp_EspecialidadWS", null, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
+            if(response == null && response.Count() == 0)
+            {
+                var resp = new List<EspecialidadWS>()
+                { 
+                    new EspecialidadWS()
+                    {
+                        Especialidad = "General",
+                        EspecialidadId = 0
+                    }
+                };
+
+                return resp.AsEnumerable();
+            }
+            
+            return response;
+        }
     }
 }

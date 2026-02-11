@@ -12,5 +12,9 @@ namespace ProcesoMedico.Aplicacion.Interfaces
         Task<List<HorariosMedico>> GetHorariosMedico(object? input);
         //Task<List<Feriados>> GetFeriados(object? input);
         Task<IEnumerable<Feriados>> GetFeriados(object? input);
+
+        //webhook
+        Task<CitaPaciente> GetCita(string input);
+        Task<IEnumerable<EspecialidadWS>> GetEspecialidad();
     }
 }

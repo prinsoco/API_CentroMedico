@@ -16,5 +16,9 @@ namespace ProcesoMedico.Infraestructura.Interfaces
     {
         ConfiguracionHorario GetHorariosMedico(object? input);
         Task<IEnumerable<Feriados>> GetFeriados(object? input);
+
+        //WebHook
+        Task<CitaPaciente> GetCita(object? input);
+        Task<IEnumerable<EspecialidadWS>> GetEspecialidad();
     }
 }

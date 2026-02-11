@@ -103,5 +103,20 @@ namespace ProcesoMedico.Aplicacion.Services
         {
             return await _repoHorario.GetFeriados(input);
         }
+        
+        public async Task<CitaPaciente> GetCita(string input)
+        {
+            var param = new
+            {
+                Identificacion = input
+            };
+
+            return await _repoHorario.GetCita(param);
+        }
+        
+        public async Task<IEnumerable<EspecialidadWS>> GetEspecialidad()
+        {
+            return await _repoHorario.GetEspecialidad();
+        }
     }
 }
