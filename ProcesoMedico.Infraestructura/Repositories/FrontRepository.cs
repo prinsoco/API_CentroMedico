@@ -76,7 +76,7 @@ namespace ProcesoMedico.Infraestructura.Repositories
             using var conn = _context.CreateConnection();
             conn.Open();
             
-            var configData = await conn.QueryAsync<Cita>("sp_Reporte_GetAll", param, null, null, commandType: CommandType.StoredProcedure);
+            var configData = await conn.QueryAsync<Cita>("sp_Reporte_GetAll", param,  null, null, commandType: CommandType.StoredProcedure);
 
             return configData;
         }

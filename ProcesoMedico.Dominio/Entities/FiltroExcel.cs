@@ -14,5 +14,8 @@ namespace ProcesoMedico.Dominio.Entities
         public string? DescEspecialidad { get; set; }
         public string? DescMedico { get; set; }
         public Boolean Download { get; set; } = false;
+
+        public string? PacienteId { get; set; }
+
     }
 }
