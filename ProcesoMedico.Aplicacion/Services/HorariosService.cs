@@ -118,5 +118,15 @@ namespace ProcesoMedico.Aplicacion.Services
         {
             return await _repoHorario.GetEspecialidad();
         }
+        
+        public async Task<IEnumerable<MedicosWS>> GetMedico(string? id)
+        {
+            var param = new
+            {
+                EspecialidadId = int.Parse(string.IsNullOrEmpty(id) ? "0" : id)
+            };
+
+            return await _repoHorario.GetMedico(param);
+        }
     }
 }

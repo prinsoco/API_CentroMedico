@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="itext7" Version="8.*" />
     <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.3.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.2" />

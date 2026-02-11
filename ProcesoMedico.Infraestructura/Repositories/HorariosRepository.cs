@@ -76,7 +76,7 @@ namespace ProcesoMedico.Infraestructura.Repositories
             conn.Open();
 
             var response = conn.QueryAsync<EspecialidadWS>("sp_EspecialidadWS", null, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
-            if(response == null && response.Count() == 0)
+            if(response == null || response?.Count() == 0)
             {
                 var resp = new List<EspecialidadWS>()
                 { 
@@ -84,6 +84,49 @@ namespace ProcesoMedico.Infraestructura.Repositories
                     {
                         Especialidad = "General",
                         EspecialidadId = 0
+                    }
+                };
+
+                return resp.AsEnumerable();
+            }
+            
+            return response;
+        }
+        
+        public async Task<IEnumerable<MedicosWS>> GetMedico(object? input)
+        {
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            var response = conn.QueryAsync<MedicosWS>("sp_MedicoWS", input, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
+            if(response == null || response?.Count() == 0)
+            {
+                var resp = new List<MedicosWS>()
+                { 
+                    new MedicosWS()
+                    {
+                        Medico = "Juan1",
+                        MedicoId = 0
+                    },
+                    new MedicosWS()
+                    {
+                        Medico = "Juan2",
+                        MedicoId = 0
+                    },
+                    new MedicosWS()
+                    {
+                        Medico = "Juan3",
+                        MedicoId = 0
+                    },
+                    new MedicosWS()
+                    {
+                        Medico = "Juan4",
+                        MedicoId = 0
+                    },
+                    new MedicosWS()
+                    {
+                        Medico = "Juan5",
+                        MedicoId = 0
                     }
                 };
 

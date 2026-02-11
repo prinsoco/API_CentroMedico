@@ -48,6 +48,7 @@ namespace ProcesoMedico.Infraestructura.Repositories
         public async Task<int> DeleteAsync(int id, string? usuarioModificacion = null)
         {
             using var conn = _context.CreateConnection();
+            conn.Open();
             var param = new DynamicParameters();
             param.Add($"{_table}Id", id); // e.g., CatalogoId, PerfilId, etc.
             if (usuarioModificacion != null) param.Add("UsuarioModificacion", usuarioModificacion);
