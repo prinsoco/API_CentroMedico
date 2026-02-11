@@ -16,5 +16,6 @@ namespace ProcesoMedico.Dominio.Entities
         public string UsuarioCreacion { get; set; } = default!;
         public DateTime? FechaModificacion { get; set; }
         public string? UsuarioModificacion { get; set; }
+        public bool Whatsapp { get; set; }
     }
 }
