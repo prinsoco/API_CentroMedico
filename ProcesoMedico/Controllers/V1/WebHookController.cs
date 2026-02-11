@@ -58,6 +58,23 @@ namespace ProcesoMedico.Api.Controllers.v1
             return Ok(respNew);
         }
 
+        [HttpGet("especialidadItems")]
+        public async Task<IActionResult> especialidadItems()
+        {
+            var respNew = new EspWSItems();
+            var items = (await _service.GetEspecialidad()).ToList();
+            if (items != null)
+            {
+                respNew.items = items.Select(x => new EspecialidadWS()
+                {
+                    EspecialidadId = x.EspecialidadId,
+                    Especialidad = x.Especialidad
+                }).ToList();
+            }
+
+            return Ok(respNew);
+        }
+
         /*[HttpGet("medicos")]
         public async Task<IActionResult> Medicos([FromQuery] string? especialidadId)
         {
