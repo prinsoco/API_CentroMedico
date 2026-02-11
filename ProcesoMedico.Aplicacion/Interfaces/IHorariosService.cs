@@ -16,5 +16,6 @@ namespace ProcesoMedico.Aplicacion.Interfaces
         //webhook
         Task<CitaPaciente> GetCita(string input);
         Task<IEnumerable<EspecialidadWS>> GetEspecialidad();
+        Task<IEnumerable<MedicosWS>> GetMedico(string id);
     }
 }
