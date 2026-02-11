@@ -30,5 +30,6 @@ namespace ProcesoMedico.Dominio.Entities
         public string? LastLogin { get; set; }
         public string? Token { get; set; }
         public string? RefreshToken { get; set; }
+        public int? LoginEspecialidad { get; set; }
     }
 }
