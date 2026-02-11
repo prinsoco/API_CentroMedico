@@ -24,7 +24,8 @@ namespace ProcesoMedico.Aplicacion.Services
                 Especialidad.Descripcion,
                 Especialidad.Observacion,
                 Especialidad.Estado,
-                Especialidad.UsuarioCreacion
+                Especialidad.UsuarioCreacion,
+                Especialidad.Whatsapp
             };
 
             return await _repo.InsertAsync(Especialidad, spParams);
@@ -38,7 +39,8 @@ namespace ProcesoMedico.Aplicacion.Services
                 Especialidad.Descripcion,
                 Especialidad.Observacion,
                 Especialidad.Estado,
-                Especialidad.UsuarioModificacion
+                Especialidad.UsuarioModificacion,
+                Especialidad.Whatsapp
             };
 
             return await _repo.UpdateAsync(Especialidad, spParams);
