@@ -80,7 +80,7 @@ namespace ProcesoMedico.Api.Controllers.v1
         [HttpPost("getDownload")]
         public async Task<IActionResult> GetDownload([FromBody] FiltroExcel filtro)
         {
-            var items = await _service.ReporteCitaAsync(new { EspecialidadId = int.Parse(string.IsNullOrEmpty(filtro.EspecialidadId) ? "0" : filtro.EspecialidadId), MedicoId = int.Parse(string.IsNullOrEmpty(filtro.MedicoId) ? "0" : filtro.MedicoId), Reporte = filtro.Reporte });
+            var items = await _service.ReporteCitaAsync(new { EspecialidadId = int.Parse(string.IsNullOrEmpty(filtro.EspecialidadId) ? "0" : filtro.EspecialidadId), MedicoId = int.Parse(string.IsNullOrEmpty(filtro.MedicoId) ? "0" : filtro.MedicoId), Reporte = filtro.Reporte, PacienteId= int.Parse(string.IsNullOrEmpty(filtro.pacienteid) ? "0" : filtro.pacienteid) });
             if (filtro.Download)
             {
                 // 🔹 Textos dinámicos
