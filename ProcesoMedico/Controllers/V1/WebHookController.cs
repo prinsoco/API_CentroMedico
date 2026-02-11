@@ -65,11 +65,11 @@ namespace ProcesoMedico.Api.Controllers.v1
             var items = (await _service.GetEspecialidad()).ToList();
             if (items != null)
             {
-                respNew.items = items.Select(x => new EspecialidadWS()
+                string dato = string.Empty;
+                foreach(var item in items)
                 {
-                    EspecialidadId = x.EspecialidadId,
-                    Especialidad = x.Especialidad
-                }).ToList();
+                    respNew.items.Add(string.Format("{ 'id':'{0}, 'valor':'{1}' }", item.EspecialidadId, item.Especialidad));
+                }
             }
 
             return Ok(respNew);

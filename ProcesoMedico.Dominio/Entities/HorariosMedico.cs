@@ -124,4 +124,29 @@ namespace ProcesoMedico.Dominio.Entities
         public int? EspecialidadId { get; set; }
         public string? Especialidad { get; set; }
     }
+
+    public class EspWS
+    {
+        public List<string>? items { get; set; }
+
+        public EspWS ()
+        {
+            items = new List<string>();
+        }
+    }
+
+    public class EspLWS
+    {
+        public string? especialidad { get; set; }
+    }
+
+    public class EspWSItems
+    {
+        public List<string>? items { get; set; }
+
+        public EspWSItems()
+        {
+            items = new List<string>();
+        }
+    }
 }
