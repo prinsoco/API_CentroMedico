@@ -174,31 +174,31 @@ namespace ProcesoMedico.Infraestructura.Repositories
                     {
                         Hora = "00:00:00",
                         HoraWS = "00:00:00",
-                        IdRando = "0"
+                        IdRango = "0"
                     },
                     new HorarioWS()
                     {
                         Hora = "00:00:00",
                         HoraWS = "00:00:00",
-                        IdRando = "0"
+                        IdRango = "0"
                     },
                     new HorarioWS()
                     {
                         Hora = "00:00:00",
                         HoraWS = "00:00:00",
-                        IdRando = "0"
+                        IdRango = "0"
                     },
                     new HorarioWS()
                     {
                         Hora = "00:00:00",
                         HoraWS = "00:00:00",
-                        IdRando = "0"
+                        IdRango = "0"
                     },
                     new HorarioWS()
                     {
                         Hora = "00:00:00",
                         HoraWS = "00:00:00",
-                        IdRando = "0"
+                        IdRango = "0"
                     }
                 };
 

@@ -175,7 +175,7 @@ namespace ProcesoMedico.Dominio.Entities
 
     public class HorarioWS
     {
-        public string? IdRando { get; set; }
+        public string? IdRango { get; set; }
         public string? Hora { get; set; }
         public string? HoraWS { get; set; }
     }

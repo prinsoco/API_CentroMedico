@@ -141,12 +141,22 @@ namespace ProcesoMedico.Aplicacion.Services
         }
         public async Task<IEnumerable<HorarioWS>> GetHorarioWS(string ident, string especialidad, string medico)
         {
-            string[] medArray = medico.Split(".");
+            string valueMed = string.Empty;
+
+            if (!string.IsNullOrEmpty(medico))
+            {
+                string[] medArray = medico.Split(".");
+                if(medArray != null)
+                {
+                    valueMed = medArray[0] + "";
+                }
+            }
+
             var param = new
             {
                 Identificacion = ident,
                 Especialidad = especialidad,
-                MedicoId = int.Parse(string.IsNullOrEmpty(medArray[0]+"") ? "0" : medArray[0]+"")
+                MedicoId = int.Parse(string.IsNullOrEmpty(valueMed) ? "0" : valueMed)
             };
 
             return await _repoHorario.GetHorarioWS(param);
