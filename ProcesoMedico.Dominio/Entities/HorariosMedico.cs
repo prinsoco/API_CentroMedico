@@ -179,4 +179,24 @@ namespace ProcesoMedico.Dominio.Entities
         public string? Hora { get; set; }
         public string? HoraWS { get; set; }
     }
+
+    public class ParamCita
+    {
+        public string? Ident { get; set; }
+        public string? Especialidad { get; set; }
+        public string? Medico { get; set; }
+    }
+
+    public class CitaWSAgendada
+    {
+        public string? Codigo { get; set; }
+        public string? Mensaje { get; set; }
+    }
+    
+    public class GenerarCitaWS
+    {
+        public string? ident { get; set; }
+        public string? fechacita { get; set; }
+        public string? medico { get; set; }
+    }
 }

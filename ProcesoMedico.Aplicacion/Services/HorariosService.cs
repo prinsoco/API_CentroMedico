@@ -145,11 +145,28 @@ namespace ProcesoMedico.Aplicacion.Services
 
             if (!string.IsNullOrEmpty(medico))
             {
-                string[] medArray = medico.Split(".");
-                if(medArray != null)
+                try
                 {
-                    valueMed = medArray[0] + "";
+                    string[] medArray = medico.Split("-");
+                    if (medArray != null)
+                    {
+                        valueMed = medArray[0] + "";
+                    }
+                    else
+                    {
+                        throw new Exception("Error");
+                    }
                 }
+                catch (Exception)
+                {
+                    string[] medArray = medico.Split("-");
+                    if (medArray != null)
+                    {
+                        valueMed = medArray[0] + "";
+                    }
+                }
+                
+                
             }
 
             var param = new
@@ -160,6 +177,73 @@ namespace ProcesoMedico.Aplicacion.Services
             };
 
             return await _repoHorario.GetHorarioWS(param);
+        }
+        
+    /*
+ * ALTER PROC [dbo].[sp_AgendarCitaWS]
+@Identificacion VARCHAR(13) = NULL,
+@MedicoId BIGINT = 0,
+@FechaCita VARCHAR(20) = NULL
+  */
+
+        public async Task<CitaWSAgendada> AgendarCita(string ident, string fechacita, string medico)
+        {
+            string valueMed = string.Empty;
+            string valueFecha = string.Empty;
+
+            if (!string.IsNullOrEmpty(medico))
+            {
+                try
+                {
+                    string[] medArray = medico.Split("-");
+                    if (medArray != null)
+                    {
+                        valueMed = medArray[0] + "";
+                    }
+                    else
+                    {
+                        throw new Exception("Error");
+                    }
+                }
+                catch (Exception)
+                {
+                    string[] medArray = medico.Split("-");
+                    if (medArray != null)
+                    {
+                        valueMed = medArray[0] + "";
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(fechacita))
+            {
+                try
+                {
+                    string[] fechaDiv = fechacita.Split(" ");
+                    if (fechaDiv != null)
+                    {
+                        string[] fecha = fechaDiv[0].Split("/");
+                        valueFecha = string.Format("{0}-{1}-{2} {3}:00", fecha[2]+"", fecha[1]+"", fecha[0],fechaDiv[1]+"");
+                    }
+                    else
+                    {
+                        throw new Exception("Error");
+                    }
+                }
+                catch (Exception)
+                {
+                    
+                }
+            }
+
+            var param = new
+            {
+                Identificacion = ident,
+                MedicoId = int.Parse(string.IsNullOrEmpty(valueMed) ? "0" : valueMed),
+                FechaCita = valueFecha
+            };
+
+            return await _repoHorario.AgendarCita(param);
         }
     }
 }

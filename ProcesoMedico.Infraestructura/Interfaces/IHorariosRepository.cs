@@ -23,5 +23,6 @@ namespace ProcesoMedico.Infraestructura.Interfaces
         Task<IEnumerable<MedicosWS>> GetMedico(object? param);
         Task<UsuarioWS> GetUsuario(object? input);
         Task<IEnumerable<HorarioWS>> GetHorarioWS(object? input);
+        Task<CitaWSAgendada> AgendarCita(object? input);
     }
 }

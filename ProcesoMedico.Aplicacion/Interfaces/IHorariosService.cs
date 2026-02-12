@@ -19,5 +19,7 @@ namespace ProcesoMedico.Aplicacion.Interfaces
         Task<IEnumerable<MedicosWS>> GetMedico(string id);
         Task<UsuarioWS> GetUsuario(string input);
         Task<IEnumerable<HorarioWS>> GetHorarioWS(string ident, string especialidad, string medico);
+
+        Task<CitaWSAgendada> AgendarCita(string ident, string fechacita, string medico);
     }
 }

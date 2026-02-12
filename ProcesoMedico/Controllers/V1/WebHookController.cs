@@ -155,5 +155,94 @@ namespace ProcesoMedico.Api.Controllers.v1
 
             return Ok(itemsEspe);
         }
+
+        [HttpGet("horariosWSFQ")]
+        public async Task<IActionResult> HorariosWSQuery([FromQuery] string? ident, [FromQuery] string? especialidad, [FromQuery] string? medico)
+        {
+            var itemsEspe = new List<string>();
+            var respNew = new MedWSItems();
+            var items = (await _service.GetHorarioWS(ident, especialidad, medico)).ToList();
+            if (items != null)
+            {
+                string jsonData = JsonConvert.SerializeObject(items);
+                string[] arrayData = jsonData.Replace("[", "").Replace("]", "").Split("},");
+                for (int i = 0; i < arrayData.Length; i++)
+                {
+                    if (i == arrayData.Length - 1)
+                    {
+                        itemsEspe.Add(arrayData[i] + "");
+                    }
+                    else
+                    {
+                        itemsEspe.Add(string.Format("{0}{1}", arrayData[i], "}"));
+                    }
+                }
+            }
+
+            return Ok(itemsEspe);
+        }
+
+        [HttpPost("horariosWSPOST")]
+        public async Task<IActionResult> HorariosPOST([FromBody] ParamCita? input)
+        {
+            var itemsEspe = new List<string>();
+            var respNew = new MedWSItems();
+            var items = (await _service.GetHorarioWS(input.Ident, input.Especialidad, input.Medico)).ToList();
+            if (items != null)
+            {
+                string jsonData = JsonConvert.SerializeObject(items);
+                string[] arrayData = jsonData.Replace("[", "").Replace("]", "").Split("},");
+                for (int i = 0; i < arrayData.Length; i++)
+                {
+                    if (i == arrayData.Length - 1)
+                    {
+                        itemsEspe.Add(arrayData[i] + "");
+                    }
+                    else
+                    {
+                        itemsEspe.Add(string.Format("{0}{1}", arrayData[i], "}"));
+                    }
+                }
+            }
+
+            return Ok(itemsEspe);
+        }
+
+        [HttpPost("agendarcita")]
+        public async Task<IActionResult> AgendamientoCitas([FromBody] GenerarCitaWS input)
+        {
+            if (input == null)
+            {
+                var repData = new CitaWSAgendada
+                {
+                    Codigo = "9999",
+                    Mensaje = "Tenemos algunos inconvenientes para realizar el agendamiento, tu Asesor Virtual de Citas se comunicará contigo para una ayuda personalizada"
+                };
+
+                return Ok(repData);
+            }
+
+            var item = await _service.AgendarCita(input.ident, input.fechacita, input.medico);
+            return Ok(item);
+        }
+
+        [HttpGet("agendarcitaWS")]
+        public async Task<IActionResult> AgendamientoCitasWS([FromQuery] string? ident, [FromQuery] string? fechacita, [FromQuery] string? medico)
+        {
+            if (string.IsNullOrWhiteSpace(ident) || string.IsNullOrWhiteSpace(fechacita) || string.IsNullOrWhiteSpace(medico))
+            {
+                var repData = new CitaWSAgendada
+                {
+                    Codigo = "9999",
+                    Mensaje = "Tenemos algunos inconvenientes para realizar el agendamiento, tu Asesor Virtual de Citas se comunicará contigo para una ayuda personalizada"
+                };
+
+                return Ok(repData);
+            }
+
+            var item = await _service.AgendarCita(ident, fechacita, medico);
+            return Ok(item);
+        }
+
     }
 }

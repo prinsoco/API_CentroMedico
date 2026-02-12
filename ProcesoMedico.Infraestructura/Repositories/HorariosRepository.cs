@@ -166,7 +166,7 @@ namespace ProcesoMedico.Infraestructura.Repositories
             conn.Open();
 
             var respBD = conn.QueryAsync<HorarioWS>("sp_GenerarHorariosWS", input, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
-            if (respBD == null)
+            if (respBD == null || respBD.Count() == 0)
             {
                 var resp = new List<HorarioWS>()
                 {
@@ -207,5 +207,27 @@ namespace ProcesoMedico.Infraestructura.Repositories
 
             return respBD;
         }
+
+        public async Task<CitaWSAgendada> AgendarCita(object? input)
+        {
+            var response = new CitaWSAgendada();
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            var respBD = conn.QueryFirstAsync<CitaWSAgendada>("sp_AgendarCitaWS", input, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
+            if (respBD == null)
+            {
+                response.Codigo = "9999";
+                response.Mensaje = "Tenemos algunos inconvenientes para realizar el agendamiento, tu Asesor Virtual de Citas se comunicará contigo para una ayuda personalizada";
+            }
+            else
+            {
+                response.Codigo = respBD.Codigo;
+                response.Mensaje = respBD.Mensaje;
+            }
+
+            return response;
+        }
+
     }
 }
