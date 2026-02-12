@@ -111,25 +111,22 @@ namespace ProcesoMedico.Api.Controllers.v1
             return Ok(itemsEspe);
         }
 
-        /*[HttpGet("medicos")]
-        public async Task<IActionResult> Medicos([FromQuery] string? especialidadId)
+        [HttpGet("usuario")]
+        public async Task<IActionResult> GetUsuario([FromQuery] string? ident)
         {
-            if (string.IsNullOrWhiteSpace(especialidadId))
+            if (string.IsNullOrWhiteSpace(ident))
             {
-                var repData = new CitaPaciente
+                var repData = new UsuarioWS
                 {
-                    Codigo = "0000",
-                    Mensaje = "API ejecutada correctamente (sin identificador)",
-                    FechaCita = "2026-02-10 10:00",
-                    Medico = "Dr. Juan Pérez",
-                    Especialidad = "General"
+                    Codigo = "9999",
+                    Mensaje = "API ejecutada correctamente (sin identificador)"
                 };
 
                 return Ok(repData);
             }
 
-            var item = await _service.GetCita(ident);
+            var item = await _service.GetUsuario(ident);
             return Ok(item);
-        }*/
+        }
     }
 }

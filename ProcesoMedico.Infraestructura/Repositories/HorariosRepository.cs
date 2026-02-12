@@ -135,5 +135,20 @@ namespace ProcesoMedico.Infraestructura.Repositories
             
             return response;
         }
+        
+        public async Task<UsuarioWS> GetUsuario(object? input)
+        {
+            var response = new UsuarioWS();
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            var respBD = conn.QueryFirstAsync<UsuarioWS>("sp_ValidarPaciente", input, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
+            if(respBD != null)
+            {
+                response.Codigo = "9999";
+                response.Mensaje = "Lo sentimos!. Número de identificación no registrada";
+            }
+            return response;
+        }
     }
 }

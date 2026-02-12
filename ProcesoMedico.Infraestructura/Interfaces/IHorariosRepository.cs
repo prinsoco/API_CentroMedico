@@ -21,5 +21,6 @@ namespace ProcesoMedico.Infraestructura.Interfaces
         Task<CitaPaciente> GetCita(object? input);
         Task<IEnumerable<EspecialidadWS>> GetEspecialidad();
         Task<IEnumerable<MedicosWS>> GetMedico(object? param);
+        Task<UsuarioWS> GetUsuario(object? input);
     }
 }

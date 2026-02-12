@@ -128,5 +128,15 @@ namespace ProcesoMedico.Aplicacion.Services
 
             return await _repoHorario.GetMedico(param);
         }
+        
+        public async Task<UsuarioWS> GetUsuario(string input)
+        {
+            var param = new
+            {
+                Identificacion = input
+            };
+
+            return await _repoHorario.GetUsuario(param);
+        }
     }
 }

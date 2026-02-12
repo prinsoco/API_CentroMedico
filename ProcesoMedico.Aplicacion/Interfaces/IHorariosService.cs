@@ -17,5 +17,6 @@ namespace ProcesoMedico.Aplicacion.Interfaces
         Task<CitaPaciente> GetCita(string input);
         Task<IEnumerable<EspecialidadWS>> GetEspecialidad();
         Task<IEnumerable<MedicosWS>> GetMedico(string id);
+        Task<UsuarioWS> GetUsuario(string input);
     }
 }

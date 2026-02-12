@@ -165,4 +165,10 @@ namespace ProcesoMedico.Dominio.Entities
             items = new List<MedicosWS>();
         }
     }
+
+    public class UsuarioWS
+    {
+        public string? Codigo { get; set; }
+        public string? Mensaje { get; set; }
+    }
 }
