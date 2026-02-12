@@ -131,7 +131,7 @@ namespace ProcesoMedico.Api.Controllers.v1
         }
 
         [HttpGet("horariosWS")]
-        public async Task<IActionResult> Horarios([FromQuery] string? ident, [FromQuery] string? especialidad, [FromQuery] string? medico)
+        public async Task<IActionResult> Horarios([FromHeader] string? ident, [FromHeader] string? especialidad, [FromHeader] string? medico)
         {
             var itemsEspe = new List<string>();
             var respNew = new MedWSItems();
