@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Infraestructura.Interfaces;
@@ -137,6 +138,18 @@ namespace ProcesoMedico.Aplicacion.Services
             };
 
             return await _repoHorario.GetUsuario(param);
+        }
+        public async Task<IEnumerable<HorarioWS>> GetHorarioWS(string ident, string especialidad, string medico)
+        {
+            string[] medArray = medico.Split(".");
+            var param = new
+            {
+                Identificacion = ident,
+                Especialidad = especialidad,
+                MedicoId = int.Parse(string.IsNullOrEmpty(medArray[0]+"") ? "0" : medArray[0]+"")
+            };
+
+            return await _repoHorario.GetHorarioWS(param);
         }
     }
 }

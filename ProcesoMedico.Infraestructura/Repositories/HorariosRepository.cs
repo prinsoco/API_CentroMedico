@@ -158,5 +158,54 @@ namespace ProcesoMedico.Infraestructura.Repositories
 
             return response;
         }
+
+
+        public async Task<IEnumerable<HorarioWS>> GetHorarioWS(object? input)
+        {
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            var respBD = conn.QueryAsync<HorarioWS>("sp_GenerarHorariosWS", input, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
+            if (respBD == null)
+            {
+                var resp = new List<HorarioWS>()
+                {
+                    new HorarioWS()
+                    {
+                        Hora = "00:00:00",
+                        HoraWS = "00:00:00",
+                        IdRando = "0"
+                    },
+                    new HorarioWS()
+                    {
+                        Hora = "00:00:00",
+                        HoraWS = "00:00:00",
+                        IdRando = "0"
+                    },
+                    new HorarioWS()
+                    {
+                        Hora = "00:00:00",
+                        HoraWS = "00:00:00",
+                        IdRando = "0"
+                    },
+                    new HorarioWS()
+                    {
+                        Hora = "00:00:00",
+                        HoraWS = "00:00:00",
+                        IdRando = "0"
+                    },
+                    new HorarioWS()
+                    {
+                        Hora = "00:00:00",
+                        HoraWS = "00:00:00",
+                        IdRando = "0"
+                    }
+                };
+
+                return resp;
+            }
+
+            return respBD;
+        }
     }
 }

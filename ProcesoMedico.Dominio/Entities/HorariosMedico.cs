@@ -172,4 +172,11 @@ namespace ProcesoMedico.Dominio.Entities
         public string? Mensaje { get; set; }
         public string? UrlLogin { get; set; }
     }
+
+    public class HorarioWS
+    {
+        public string? IdRando { get; set; }
+        public string? Hora { get; set; }
+        public string? HoraWS { get; set; }
+    }
 }

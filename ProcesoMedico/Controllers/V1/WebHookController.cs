@@ -129,5 +129,31 @@ namespace ProcesoMedico.Api.Controllers.v1
             var item = await _service.GetUsuario(ident);
             return Ok(item);
         }
+
+        [HttpGet("horariosWS")]
+        public async Task<IActionResult> Horarios([FromQuery] string? ident, [FromQuery] string? especialidad, [FromQuery] string? medico)
+        {
+            var itemsEspe = new List<string>();
+            var respNew = new MedWSItems();
+            var items = (await _service.GetHorarioWS(ident, especialidad, medico)).ToList();
+            if (items != null)
+            {
+                string jsonData = JsonConvert.SerializeObject(items);
+                string[] arrayData = jsonData.Replace("[", "").Replace("]", "").Split("},");
+                for (int i = 0; i < arrayData.Length; i++)
+                {
+                    if (i == arrayData.Length - 1)
+                    {
+                        itemsEspe.Add(arrayData[i] + "");
+                    }
+                    else
+                    {
+                        itemsEspe.Add(string.Format("{0}{1}", arrayData[i], "}"));
+                    }
+                }
+            }
+
+            return Ok(itemsEspe);
+        }
     }
 }
