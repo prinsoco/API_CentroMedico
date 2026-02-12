@@ -41,7 +41,7 @@ namespace ProcesoMedico.Aplicacion.Services
 
         public async Task<int> InsertMedicoAsync(Medico Medico)
         {
-            string claveHash = _passwordHasher.HashPassword(Medico.Clave);
+            string claveHash = _passwordHasher.HashPassword(string.IsNullOrEmpty(Medico.Clave) ? Medico.Identificacion : Medico.Clave);
             var spParams = new
             {
                 Medico.PerfilId,
