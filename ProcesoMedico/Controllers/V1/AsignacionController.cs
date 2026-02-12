@@ -13,6 +13,7 @@ namespace ProcesoMedico.Api.Controllers.v1
         private readonly IAsignacionService _service;
         public AsignacionController(IAsignacionService service) => _service = service;
 
+
         [HttpPost("crear")]
         public async Task<IActionResult> Create([FromBody] Asignacion dto)
         {
