@@ -53,7 +53,7 @@ namespace ProcesoMedico.Api.Controllers.v1
             {
                 for(int i = 0; i < items.Count(); i++)
                 {
-                    respNew.especialidad += (string.Format("{0} - {1}\n", items[i].EspecialidadId, items[i].Especialidad));
+                    respNew.especialidad += (string.Format("{0} - {1}\n", items[i].Id, items[i].Especialidad));
                 }
             }
 

@@ -83,7 +83,7 @@ namespace ProcesoMedico.Infraestructura.Repositories
                     new EspecialidadWS()
                     {
                         Especialidad = "General",
-                        EspecialidadId = 0
+                        Id = "0"
                     }
                 };
 
@@ -106,27 +106,27 @@ namespace ProcesoMedico.Infraestructura.Repositories
                     new MedicosWS()
                     {
                         Medico = "Juan1",
-                        MedicoId = 0
+                        Id = "0"
                     },
                     new MedicosWS()
                     {
                         Medico = "Juan2",
-                        MedicoId = 0
+                        Id = "0"
                     },
                     new MedicosWS()
                     {
                         Medico = "Juan3",
-                        MedicoId = 0
+                        Id = "0"
                     },
                     new MedicosWS()
                     {
                         Medico = "Juan4",
-                        MedicoId = 0
+                        Id = "0"
                     },
                     new MedicosWS()
                     {
                         Medico = "Juan5",
-                        MedicoId = 0
+                        Id = "0"
                     }
                 };
 

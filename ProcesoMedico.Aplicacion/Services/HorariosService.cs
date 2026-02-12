@@ -123,7 +123,7 @@ namespace ProcesoMedico.Aplicacion.Services
         {
             var param = new
             {
-                EspecialidadId = int.Parse(string.IsNullOrEmpty(id) ? "0" : id)
+                Especialidad = id
             };
 
             return await _repoHorario.GetMedico(param);

@@ -121,13 +121,13 @@ namespace ProcesoMedico.Dominio.Entities
     
     public class EspecialidadWS
     {
-        public int? EspecialidadId { get; set; }
+        public string? Id { get; set; }
         public string? Especialidad { get; set; }
     }
     
     public class MedicosWS
     {
-        public int? MedicoId { get; set; }
+        public string? Id { get; set; }
         public string? Medico { get; set; }
     }
 
