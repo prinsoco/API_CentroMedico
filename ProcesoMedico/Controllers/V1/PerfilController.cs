@@ -29,7 +29,7 @@ namespace ProcesoMedico.Api.Controllers.v1
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromBody] Perfil dto)
         {
-            var affected = await _service.UpdateAsync(dto);
+            var affected = await _service.UpdatePerfilAsync(dto);
             var response = new ResponseCreate()
             {
                 Id = affected,
