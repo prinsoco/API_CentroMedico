@@ -170,5 +170,6 @@ namespace ProcesoMedico.Dominio.Entities
     {
         public string? Codigo { get; set; }
         public string? Mensaje { get; set; }
+        public string? UrlLogin { get; set; }
     }
 }

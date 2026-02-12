@@ -119,7 +119,8 @@ namespace ProcesoMedico.Api.Controllers.v1
                 var repData = new UsuarioWS
                 {
                     Codigo = "9999",
-                    Mensaje = "API ejecutada correctamente (sin identificador)"
+                    Mensaje = "API ejecutada correctamente (sin identificador)",
+                    UrlLogin = "Url no valida"
                 };
 
                 return Ok(repData);
