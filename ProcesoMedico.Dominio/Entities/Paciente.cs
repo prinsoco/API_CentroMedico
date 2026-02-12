@@ -27,5 +27,7 @@ namespace ProcesoMedico.Dominio.Entities
         public string? Clave { get; set; }
         public string? DescPerfil { get; set; }
         public string? PacienteInfo { get; set; }
+        public bool? Notificacion { get; set; }
+
     }
 }

@@ -81,7 +81,8 @@ namespace ProcesoMedico.Aplicacion.Services
                 Paciente.Celular,
                 Paciente.Direccion,
                 Paciente.Estado,
-                Paciente.UsuarioModificacion
+                Paciente.UsuarioModificacion,
+                Paciente.Notificacion
             };
 
             return await _repo.UpdateAsync(Paciente, spParams);
