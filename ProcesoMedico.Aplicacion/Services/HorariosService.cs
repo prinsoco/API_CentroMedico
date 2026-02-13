@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
@@ -9,9 +10,11 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Infraestructura.Interfaces;
+using ProcesoMedico.Infraestructura.Seguridad;
 //using Newtonsoft.Json;
 
 namespace ProcesoMedico.Aplicacion.Services
@@ -21,12 +24,17 @@ namespace ProcesoMedico.Aplicacion.Services
         private readonly IHorariosRepository _repoHorario;
         private readonly IGenericRepository<HorariosMedico> _repo;
         private readonly IConfiguration _configuration;
+        private readonly IUnitOfWorkRepository _unitofWork;
+        private readonly IMailService _mail;
 
-        public HorariosService(IGenericRepository<HorariosMedico> repo, IConfiguration configuration, IHorariosRepository repoHorario) : base(repo)
+        public HorariosService(IGenericRepository<HorariosMedico> repo, IConfiguration configuration, IHorariosRepository repoHorario,
+            IUnitOfWorkRepository unitofWork, IMailService mail) : base(repo)
         {
             _repo = repo;
             _repoHorario = repoHorario;
             _configuration = configuration;
+            _unitofWork = unitofWork;
+            _mail = mail;
         }
 
         public async Task<List<HorariosMedico>> GetHorariosMedico(object? input)
@@ -178,18 +186,13 @@ namespace ProcesoMedico.Aplicacion.Services
 
             return await _repoHorario.GetHorarioWS(param);
         }
-        
-    /*
- * ALTER PROC [dbo].[sp_AgendarCitaWS]
-@Identificacion VARCHAR(13) = NULL,
-@MedicoId BIGINT = 0,
-@FechaCita VARCHAR(20) = NULL
-  */
 
         public async Task<CitaWSAgendada> AgendarCita(string ident, string fechacita, string medico)
         {
+            var agenda = new CitaWSAgendada();
             string valueMed = string.Empty;
             string valueFecha = string.Empty;
+            string valueHora = string.Empty;
 
             if (!string.IsNullOrEmpty(medico))
             {
@@ -223,7 +226,8 @@ namespace ProcesoMedico.Aplicacion.Services
                     if (fechaDiv != null)
                     {
                         string[] fecha = fechaDiv[0].Split("/");
-                        valueFecha = string.Format("{0}-{1}-{2} {3}:00", fecha[2]+"", fecha[1]+"", fecha[0],fechaDiv[1]+"");
+                        valueFecha = string.Format("{0}-{1}-{2} ", fecha[2]+"", fecha[1]+"", fecha[0]+"");
+                        valueHora = string.Format("{0}:00", fechaDiv[1] + "");
                     }
                     else
                     {
@@ -240,10 +244,84 @@ namespace ProcesoMedico.Aplicacion.Services
             {
                 Identificacion = ident,
                 MedicoId = int.Parse(string.IsNullOrEmpty(valueMed) ? "0" : valueMed),
-                FechaCita = valueFecha
+                FechaCita = valueFecha,
+                HoraCita = valueHora
             };
 
-            return await _repoHorario.AgendarCita(param);
+            var response = await _repoHorario.AgendarCita(param);
+
+            if(response != null && response.Codigo == "0000")
+            {
+                generarNotiCita(response, $"{_configuration["Notificacion:GenerarCita"]}", $"{_configuration["Notificacion:Codigo"]}", null);
+
+                agenda = new CitaWSAgendada()
+                {
+                    Codigo = response.Codigo,
+                    Mensaje = response.Mensaje
+                };
+            }
+            else
+            {
+                agenda = new CitaWSAgendada()
+                {
+                    Codigo = response.Codigo,
+                    Mensaje = response.Mensaje
+                };
+            }
+
+            return agenda;
         }
+
+        #region Privados
+        private void generarNotiCita(CitaNotifWSAgendada cita, string tipo, string codigo, string url)
+        {
+            //Notificaciones
+            var notificacion = _unitofWork.Notificaciones(new { Combo = "S" }).GetAwaiter().GetResult();
+
+            //Parametros email
+            var param = _unitofWork.Parametros(new { Combo = "S", Tipo = "EmailSettings" }).GetAwaiter().GetResult();
+
+            //parametro login
+            var paramLogin = _unitofWork.Parametros(new { Combo = "S", Tipo = "NewUser", Codigo = url }).GetAwaiter().GetResult();
+
+            var request = new MailRequest();
+
+            //plantilla
+            request.Body = notificacion.Where(x => x.Codigo == codigo && x.Tipo == tipo)?.FirstOrDefault()?.Plantilla;
+            request.Parametros = param.Select(x => new ParametrosEmail
+            {
+                Nombre = x.Codigo,
+                Valor = x.Valor
+            }).ToList();
+
+            string[] paciente = cita.Paciente.Split(";");
+            request.Recipients = new List<Recipient>()
+            {
+                new Recipient()
+                {
+                    To = paciente[1]+"",
+                    ToName = paciente[0]+""
+                }
+            };
+            request.Subject = "Notificación Cancelación de Cita";
+
+            var cultureEc = new CultureInfo("es-EC");
+            string fecha = cita.FechaCita?.ToString("yyyy-MM-dd", cultureEc);
+            string hora = cita.FechaCita?.ToString("HH:mm:ss", cultureEc);
+
+
+            request.Json = JsonConvert.SerializeObject(new
+            {
+                NombrePaciente = paciente[0] + "",
+                FechaCita = fecha,
+                HoraCita = hora,
+                NombreMedico = cita.Medico,
+                Especialidad = cita.Especialidad,
+                AnioActual = DateTime.Now.Year
+            });
+            _mail.EnviarEmail(request);
+
+        }
+        #endregion
     }
 }

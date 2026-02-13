@@ -208,13 +208,13 @@ namespace ProcesoMedico.Infraestructura.Repositories
             return respBD;
         }
 
-        public async Task<CitaWSAgendada> AgendarCita(object? input)
+        public async Task<CitaNotifWSAgendada> AgendarCita(object? input)
         {
-            var response = new CitaWSAgendada();
+            var response = new CitaNotifWSAgendada();
             using var conn = _context.CreateConnection();
             conn.Open();
 
-            var respBD = conn.QueryFirstAsync<CitaWSAgendada>("sp_AgendarCitaWS", input, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
+            var respBD = conn.QueryFirstAsync<CitaNotifWSAgendada>("sp_AgendarCitaWS", input, null, null, commandType: CommandType.StoredProcedure).GetAwaiter().GetResult();
             if (respBD == null)
             {
                 response.Codigo = "9999";
@@ -224,6 +224,11 @@ namespace ProcesoMedico.Infraestructura.Repositories
             {
                 response.Codigo = respBD.Codigo;
                 response.Mensaje = respBD.Mensaje;
+                response.Paciente = respBD.Paciente;
+                response.Medico = respBD.Medico;
+                response.Especialidad = respBD.Especialidad;
+                response.FechaCita = respBD.FechaCita;
+
             }
 
             return response;

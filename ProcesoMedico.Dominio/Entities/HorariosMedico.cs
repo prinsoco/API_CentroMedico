@@ -199,4 +199,15 @@ namespace ProcesoMedico.Dominio.Entities
         public string? fechacita { get; set; }
         public string? medico { get; set; }
     }
+
+    public class CitaNotifWSAgendada
+    {
+        public string? Codigo { get; set; }
+        public string? Mensaje { get; set; }
+        public string? Paciente { get; set; }
+        public string? Medico { get; set; }
+        public string? Especialidad { get; set; }
+        public DateTime? FechaCita { get; set; }
+
+    }
 }

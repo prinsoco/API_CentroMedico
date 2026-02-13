@@ -87,7 +87,7 @@ builder.Services.AddScoped<IHorarioService, HorarioService>();
 
 
 //ADD Cors
-var MyCors = "AllowAll";
+var MyCors = "EnableCORS";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(MyCors,
@@ -96,7 +96,9 @@ builder.Services.AddCors(options =>
             policy.AllowAnyOrigin()
                   .AllowAnyMethod()
                   .AllowAnyHeader()
-                  .WithOrigins("http://localhost:4200");
+                  .SetIsOriginAllowed(origin => true);
+                  //.WithOrigins("https://www.medicare-soft.com/#/admin/login", "https://www.medicare-soft.com/", "https://www.medicare-soft.com", "http://www.medicare-soft.com/", "http://www.medicare-soft.com", "http://localhost:4200", "http://localhost:4200/", "https://localhost:4200", "https://localhost:4200/");
+                  
         });
 });
 
@@ -110,9 +112,38 @@ var app = builder.Build();
     app.UseSwaggerUI();
 //}
 
+app.UseForwardedHeaders();
+
+app.Use(async (context, next) =>
+{
+    //var corsOrigins = Configuration.GetValue<string>("App:CorsOrigins");
+    var cspHeader = "frame-ancestors 'self'";
+
+    //if (!string.IsNullOrEmpty(corsOrigins))
+    //{
+    //    var origins = corsOrigins.Split(",", StringSplitOptions.RemoveEmptyEntries)
+    //                             .Select(origin => origin.Trim())
+    //                             .Where(origin => Uri.IsWellFormedUriString(origin, UriKind.Absolute));
+
+    //    if (origins.Any())
+    //    {
+    //        cspHeader += " " + string.Join(" ", origins);
+    //    }
+    //}
+
+    context.Response.Headers.Add("Content-Security-Policy", cspHeader);
+    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    context.Response.Headers.Add("X-Frame-Options", "DENY");
+    context.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Security-Policy");
+
+    await next();
+});
+
 app.UseCors(MyCors);
 app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseAuthentication();
 app.UseMiddleware<ResponseCatcherMiddleware>();
 app.MapControllers();
 
