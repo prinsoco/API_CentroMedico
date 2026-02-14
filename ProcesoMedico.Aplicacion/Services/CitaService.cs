@@ -47,7 +47,7 @@ namespace ProcesoMedico.Aplicacion.Services
 
             if (result > 0)
             {
-                generarNotiCita(Cita, $"{_configuration["Notificacion:GenerarCita"]}", $"{_configuration["Notificacion:Codigo"]}", null);
+                generarNotiCita(Cita, $"{_configuration["Notificacion:GenerarCita"]}", $"{_configuration["Notificacion:Codigo"]}", null, "Notificación Asignación de Cita");
             }
 
             return result;
@@ -68,9 +68,9 @@ namespace ProcesoMedico.Aplicacion.Services
 
             int result = _repo.UpdateAsync(Cita, spParams).GetAwaiter().GetResult();
 
-            if (result > 0)
+            if (result > 0 && Cita?.EstadoCita == "CANC")
             {
-                generarNotiCita(Cita, $"{_configuration["Notificacion:Eliminar"]}", $"{_configuration["Notificacion:Codigo"]}", null);
+                generarNotiCita(Cita, $"{_configuration["Notificacion:Eliminar"]}", $"{_configuration["Notificacion:Codigo"]}", null, "Notificación Cancelación de Cita");
             }
 
             return result;
@@ -82,7 +82,7 @@ namespace ProcesoMedico.Aplicacion.Services
         }
 
         #region Privados
-        private void generarNotiCita(Cita cita, string tipo, string codigo, string url)
+        private void generarNotiCita(Cita cita, string tipo, string codigo, string url, string asunto)
         {
             //Notificaciones
             var notificacion = _unitofWork.Notificaciones(new { Combo = "S" }).GetAwaiter().GetResult();
@@ -112,7 +112,7 @@ namespace ProcesoMedico.Aplicacion.Services
                     ToName = paciente[0]+""
                 }
             };
-            request.Subject = "Notificación Cancelación de Cita";
+            request.Subject = asunto;
 
             var cultureEc = new CultureInfo("es-EC");
             string fecha = cita.FechaCita?.ToString("yyyy-MM-dd", cultureEc);
