@@ -16,6 +16,7 @@ namespace ProcesoMedico.Dominio.Entities
         public decimal? TasaInasistencia { get; set; }
         public int? Suscriptores { get; set; }
         public string? EspecialidadAsis { get; set; }
+        public int? EspecialidadMasPedida { get; set; }
 
     }
 }
