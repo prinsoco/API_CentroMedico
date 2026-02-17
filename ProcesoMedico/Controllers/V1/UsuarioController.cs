@@ -81,5 +81,13 @@ namespace ProcesoMedico.Api.Controllers.v1
             var item = await _service.GetUserAsync(user);
             return Ok(new ResponseDetails<Usuario>(item));
         }
+
+        [HttpGet("getByEmail")]
+        public async Task<IActionResult> getByEmail([FromHeader] string? tipo, [FromHeader] string? emailuser)
+        {
+            var item = await _service.GetByEmailAsync(emailuser, tipo);
+
+            return Ok(new ResponseDetails<Usuario>(item));
+        }
     }
 }

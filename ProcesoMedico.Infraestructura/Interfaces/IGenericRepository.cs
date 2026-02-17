@@ -21,5 +21,6 @@ namespace ProcesoMedico.Infraestructura.Interfaces
         Task<PagedResult<T>> GetAllPagedAsync(object? filters, int pageNumber, int pageSize);
         Task<T?> LoginAsync(object? filters = null);
         Task<T?> GetByUserAsync(string? user);
+        Task<T?> GetByEmailAsync(string? Emailuser, string? tipo);
     }
 }

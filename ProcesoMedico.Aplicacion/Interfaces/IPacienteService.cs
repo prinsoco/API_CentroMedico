@@ -13,5 +13,6 @@ namespace ProcesoMedico.Aplicacion.Interfaces
         Task<int> UpdatePacienteAsync(Paciente input);
         Task<LoginResponse> LoginPaciente(LoginRequest Paciente);
         Task<IEnumerable<Paciente>> ReportePacienteAsync(object input);
+        
     }
 }
