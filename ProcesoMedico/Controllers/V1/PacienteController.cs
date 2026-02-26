@@ -18,6 +18,7 @@ namespace ProcesoMedico.Api.Controllers.v1
     public class PacienteController : ControllerBase
     {
         private readonly IPacienteService _service;
+        
         private readonly IMailService _mail;
         public PacienteController(IPacienteService service, IMailService mail) 
         { 
@@ -91,6 +92,14 @@ namespace ProcesoMedico.Api.Controllers.v1
         public async Task<IActionResult> GetByUser([FromHeader] string? user)
         {
             var item = await _service.GetUserAsync(user);
+            return Ok(new ResponseDetails<Paciente>(item));
+        }
+
+        [HttpGet("getByEmail")]
+        public async Task<IActionResult> getByEmail([FromHeader] string? tipo, [FromHeader] string? emailuser)
+        {
+            var item = await _service.GetByEmailAsync(emailuser,tipo);
+           
             return Ok(new ResponseDetails<Paciente>(item));
         }
 

@@ -98,5 +98,14 @@ namespace ProcesoMedico.Infraestructura.Repositories
             param.Add("Usuario", user);
             return await conn.QueryFirstOrDefaultAsync<T>(Sp("GetByUser"), param, commandType: CommandType.StoredProcedure);
         }
+        public async Task<T?> GetByEmailAsync(string? Emailuser, string? tipo)
+        {
+            using var conn = _context.CreateConnection();
+            conn.Open();
+            var param = new DynamicParameters();
+            param.Add("Email", Emailuser);
+            param.Add("Tipo", tipo);
+            return await conn.QueryFirstOrDefaultAsync<T>(Sp("Recupera_GetByEmail"), param, commandType: CommandType.StoredProcedure);
+        }
     }
 }
