@@ -81,6 +81,19 @@ namespace ProcesoMedico.Aplicacion.Services
             return await _frontReport.ReporteCitaAsync(input);
         }
 
+        public async Task<int> FidelizacionCitaAsync(string estadoCita)
+        {
+            var response = _unitofWork.GetFidelizacionCitaAsync(estadoCita);
+
+            if (response != null && response.Result.Any())
+            {
+                fidelizacionPaciente(response?.Result, $"{_configuration["Notificacion:Recordatorio"]}", $"{_configuration["Notificacion:Codigo"]}", null, "Notificación de Fidelización :: Cita");
+                return 1;
+            }
+
+            return 0;
+        }
+
         #region Privados
         private void generarNotiCita(Cita cita, string tipo, string codigo, string url, string asunto)
         {
@@ -129,6 +142,70 @@ namespace ProcesoMedico.Aplicacion.Services
                 AnioActual = DateTime.Now.Year
             });
             _mail.EnviarEmail(request);
+
+        }
+
+        private void fidelizacionPaciente(IEnumerable<FidelizacionCita> cita, string tipo, string codigo, string url, string asunto)
+        {
+            //Notificaciones
+            var notificacion = _unitofWork.Notificaciones(new { Combo = "S" }).GetAwaiter().GetResult();
+
+            //Parametros email
+            var param = _unitofWork.Parametros(new { Combo = "S", Tipo = "EmailSettings" }).GetAwaiter().GetResult();
+
+            //parametro login
+            var paramLogin = _unitofWork.Parametros(new { Combo = "S", Tipo = "NewUser", Codigo = url }).GetAwaiter().GetResult();
+
+            //plantilla
+            string plantilla = notificacion.Where(x => x.Codigo == codigo && x.Tipo == tipo)?.FirstOrDefault()?.Plantilla;
+
+            foreach (var item in cita)
+            {
+                var request = new MailRequest();
+
+                //plantilla
+                request.Body = plantilla;
+                request.Parametros = param.Select(x => new ParametrosEmail
+                {
+                    Nombre = x.Codigo,
+                    Valor = x.Valor
+                }).ToList();
+
+                request.Recipients = new List<Recipient>()
+                {
+                    new Recipient()
+                    {
+                        To = item.Correo,
+                        ToName = item.Nombres
+                    }
+                };
+                request.Subject = asunto;
+
+                var cultureEc = new CultureInfo("es-EC");
+                string fecha = item.FechaCita;
+                string hora = item.HoraCita;
+
+
+                request.Json = JsonConvert.SerializeObject(new
+                {
+                    NombrePaciente = item.Nombres,
+                    FechaCita = fecha,
+                    HoraCita = hora,
+                    NombreMedico = item.Medico,
+                    Especialidad = item.Especialidad,
+                    AnioActual = DateTime.Now.Year
+                });
+
+                try
+                {
+                    _mail.EnviarEmail(request);
+                }
+                catch
+                {
+
+                }
+                
+            }
 
         }
         #endregion

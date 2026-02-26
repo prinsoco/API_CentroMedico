@@ -30,4 +30,16 @@ namespace ProcesoMedico.Dominio.Entities
         public int? Id { get; set; }
         public Cita? Cita { get; set; }
     }
+
+    public class FidelizacionCita
+    {
+        public string? Nombres { get; set; }
+        public string? FechaCita { get; set; }
+        public string? HoraCita { get; set; }
+        public string? Medico { get; set; }
+        public string? Especialidad { get; set; }
+        public string? Receta { get; set; }
+        public string? Correo { get; set; }
+
+    }
 }

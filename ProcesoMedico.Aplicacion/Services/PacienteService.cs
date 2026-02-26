@@ -6,6 +6,7 @@ using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Infraestructura.Interfaces;
 using ProcesoMedico.Infraestructura.Seguridad;
 using Newtonsoft.Json;
+using System;
 
 namespace ProcesoMedico.Aplicacion.Services
 {
@@ -55,10 +56,11 @@ namespace ProcesoMedico.Aplicacion.Services
                 CodPerfil = $"{_configuration["Parametros:PerfilPaciente"]}"
             };
 
-            int result = _repo.InsertAsync(Paciente, spParams).GetAwaiter().GetResult();
+            int result = 1;// _repo.InsertAsync(Paciente, spParams).GetAwaiter().GetResult();
 
             if(result > 0)
             {
+                generarSuscriptor(Paciente);
                 generarNotificacion(Paciente, $"{_configuration["Notificacion:Insertar"]}", $"{_configuration["Notificacion:Codigo"]}", $"{_configuration["Parametros:CodLogin"]}");
             }
 
@@ -130,6 +132,18 @@ namespace ProcesoMedico.Aplicacion.Services
             return await _frontReport.ReportePacienteAsync(input);
         }
 
+        public async Task<int> RecuperarClave(string correo, string tipo)
+        {
+            var response = await _unitofWork.RecuperarClave(correo, tipo);
+            if(response != null)
+            {
+                generarNotificacionRecuperar(response, correo);
+                return 1;
+            }
+
+            return 0;
+        }
+
         #region Privados
         private void generarNotificacion(Paciente Paciente, string tipo, string codigo, string url)
         {
@@ -164,6 +178,62 @@ namespace ProcesoMedico.Aplicacion.Services
                 AnioActual = DateTime.Now.Year});
             _mail.EnviarEmail(request);
 
+        }
+
+        private void generarSuscriptor(Paciente input)
+        {
+            //Parametros WC Api
+            var param = _unitofWork.Parametros(new { Combo = "S", Tipo = "WhatChimpApi" }).GetAwaiter().GetResult();
+
+            string numSuscriptor = new Utilitarios().GenerarPhone(input.Celular);
+            if (string.IsNullOrEmpty(numSuscriptor) && param != null && param.Any())
+            {
+                _unitofWork.CrearSuscriptor(new WCApiMetodos.Request()
+                {
+                    APIKEY = param.Where(x => x.Codigo == $"{_configuration["WCApi:ValApiKey"]}").FirstOrDefault()?.Valor ?? "",
+                    PHONENUMBERID = param.Where(x => x.Codigo == $"{_configuration["WCApi:ValPhoneId"]}").FirstOrDefault()?.Valor ?? "",
+                    URL = param.Where(x => x.Codigo == $"{_configuration["WCApi:ValUrlCrearSub"]}").FirstOrDefault()?.Valor ?? "",
+                    NAME = string.Format("{0} {1}", input.Nombres, input.Apellidos),
+                    PHONENUMBER = numSuscriptor
+                });
+            }
+        }
+
+        private void generarNotificacionRecuperar(RecuperarClaveResponse input, string correo)
+        {
+            //Notificaciones
+            var notificacion = _unitofWork.Notificaciones(new { Combo = "S" }).GetAwaiter().GetResult();
+
+            //Parametros email
+            var param = _unitofWork.Parametros(new { Combo = "S", Tipo = "EmailSettings" }).GetAwaiter().GetResult();
+
+            var request = new MailRequest();
+
+            //plantilla
+            request.Body = notificacion.Where(x => x.Codigo == $"{_configuration["Notificacion:Codigo"]}" && x.Tipo == $"{_configuration["Notificacion:Clave"]}")?.FirstOrDefault()?.Plantilla;
+            request.Parametros = param.Select(x => new ParametrosEmail
+            {
+                Nombre = x.Codigo,
+                Valor = x.Valor
+            }).ToList();
+            request.Recipients = new List<Recipient>()
+            {
+                new Recipient()
+                {
+                    To = correo,
+                    ToName = input.Nombres
+                }
+            };
+            request.Subject = "Notificación Recuperación de Contraseña";
+            request.Json = JsonConvert.SerializeObject(new
+            {
+                NombreCliente = input.Nombres,
+                UrlResetPassword = input.UrlResetPassword,
+                TiempoExpiracion = input.TiempoExpiracion,
+                AnioActual = DateTime.Now.Year
+            });
+
+            _mail.EnviarEmail(request);
         }
         #endregion
     }

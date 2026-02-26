@@ -66,5 +66,18 @@ namespace ProcesoMedico.Api.Controllers.v1
             var affected = await _service.DeleteAsync(id, usuarioModificacion);
             return affected > 0 ? Ok(affected) : NotFound();
         }
+
+        [HttpPost("recupera_clave")]
+        public async Task<IActionResult> RecuperaClave([FromBody] RecuperarClaveReq input)
+        {
+            var id = await _service.RecuperarClave(input.Correo, input.Tipo);
+            var response = new ResponseCreate()
+            {
+                Id = id,
+                Message = id > 0 ? "Recuperación de clave exitosa" : "Error al recuperar la clave"
+            };
+
+            return Ok(response);
+        }
     }
 }

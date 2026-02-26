@@ -9,6 +9,7 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Kernel.Font;
 using iText.IO.Font.Constants;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace ProcesoMedico.Api.Controllers.v1
 {
@@ -171,6 +172,19 @@ namespace ProcesoMedico.Api.Controllers.v1
         public async Task<IActionResult> Email([FromBody] string? puerto)
         {
             var response = await _mail.EnviarEmail(null);
+            return Ok(response);
+        }
+
+        [HttpPost("recupera_clave")]
+        public async Task<IActionResult> RecuperaClave([FromBody] RecuperarClaveReq input)
+        {
+            var id = await _service.RecuperarClave(input.Correo, input.Tipo);
+            var response = new ResponseCreate()
+            {
+                Id = id,
+                Message = id > 0 ? "Recuperación de clave exitosa" : "Error al recuperar la clave"
+            };
+
             return Ok(response);
         }
     }

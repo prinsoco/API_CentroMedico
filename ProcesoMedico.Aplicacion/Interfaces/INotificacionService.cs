@@ -11,5 +11,6 @@ namespace ProcesoMedico.Aplicacion.Interfaces
     {
         Task<int> InsertNotificacionAsync(Notificacion input);
         Task<int> UpdateNotificacionAsync(Notificacion input);
+        Task<int> RecuperarClave(string correo, string tipo);
     }
 }

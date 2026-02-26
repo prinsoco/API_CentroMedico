@@ -19,4 +19,19 @@ namespace ProcesoMedico.Dominio.Entities
         public DateTime? FechaModificacion { get; set; }
         public string? UsuarioModificacion { get; set; }
     }
+
+    public class RecuperarClaveReq
+    {
+        public string? Correo { get; set; }
+        public string? Tipo { get; set; }
+    }
+    public class RecuperarClaveResponse
+    {
+        public int? Id { get; set; }
+        public string? Nombres { get; set; }
+        public string? UrlResetPassword { get; set; }
+        public string? AnioActual { get; set; }
+        public string? TiempoExpiracion { get; set; }
+
+    }
 }

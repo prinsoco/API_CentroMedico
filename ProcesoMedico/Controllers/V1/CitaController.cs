@@ -149,5 +149,19 @@ namespace ProcesoMedico.Api.Controllers.v1
                 return Ok(new ResponseDetails<IEnumerable<Cita>>(items));
             }
         }
+
+        //envio de notificaciones por correo
+        [HttpPost("fidelizacion_citas")]
+        public async Task<IActionResult> CitasProgramadas()
+        {
+            var id = await _service.FidelizacionCitaAsync("");
+            var response = new ResponseCreate()
+            {
+                Id = id,
+                Message = id > 0 ? "Cita registrada con exito" : id == -9999 ? "El horario seleccionado no se encuentra disponible" : id == -1111 ? "Ya tiene una cita agendada para este día" : id == -2222 ? "Ya tiene una cita agendada para el horario seleccionado, con otro médico" : "Error al registro la cita"
+            };
+
+            return Ok(response);
+        }
     }
 }
