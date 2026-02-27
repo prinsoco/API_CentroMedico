@@ -24,6 +24,8 @@ namespace ProcesoMedico.Dominio.Entities
     {
         public string? Correo { get; set; }
         public string? Tipo { get; set; }
+        public string? Token { get; set; }
+        public string? Clave { get; set; }
     }
     public class RecuperarClaveResponse
     {
@@ -32,6 +34,8 @@ namespace ProcesoMedico.Dominio.Entities
         public string? UrlResetPassword { get; set; }
         public string? AnioActual { get; set; }
         public string? TiempoExpiracion { get; set; }
+        public string? UrlLogin { get; set; }
+        public string? Correo { get; set; }
 
     }
 }

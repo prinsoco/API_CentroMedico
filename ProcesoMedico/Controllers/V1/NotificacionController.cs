@@ -3,6 +3,7 @@ using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Services;
 using ProcesoMedico.Dominio.Entities;
 using ProcesoMedico.Dominio.Utils;
+using System.Net;
 
 namespace ProcesoMedico.Api.Controllers.v1
 {
@@ -70,7 +71,7 @@ namespace ProcesoMedico.Api.Controllers.v1
         [HttpPost("recupera_clave")]
         public async Task<IActionResult> RecuperaClave([FromBody] RecuperarClaveReq input)
         {
-            var id = await _service.RecuperarClave(input.Correo, input.Tipo);
+            var id = await _service.RecuperarClave(input.Correo, input.Tipo, input.Token, input.Clave);
             var response = new ResponseCreate()
             {
                 Id = id,

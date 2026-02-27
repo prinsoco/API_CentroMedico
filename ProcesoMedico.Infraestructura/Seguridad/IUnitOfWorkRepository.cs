@@ -22,7 +22,8 @@ namespace ProcesoMedico.Infraestructura.Seguridad
         #endregion
 
         #region Notificaciones
-        Task<RecuperarClaveResponse> RecuperarClave(string correo, string tipo);
+        Task<RecuperarClaveResponse> RecuperarClave(string correo, string tipo, string id);
+        Task<int> UpdateClave(string id, string clave, string tipo);
         #endregion
     }
 }

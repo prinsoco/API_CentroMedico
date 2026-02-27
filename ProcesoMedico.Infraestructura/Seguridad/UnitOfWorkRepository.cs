@@ -129,15 +129,16 @@ namespace ProcesoMedico.Infraestructura.Seguridad
             return null;
         }
 
-        public async Task<RecuperarClaveResponse> RecuperarClave(string correo, string tipo)
+        public async Task<RecuperarClaveResponse> RecuperarClave(string correo, string tipo, string id)
         {
             using var conn = _context.CreateConnection();
             conn.Open();
 
             var param = new
             {
-                Correo = correo,
-                Tipo = tipo
+                Correo = string.IsNullOrEmpty(correo) ? null : correo,
+                Tipo = tipo,
+                Id = string.IsNullOrEmpty(id) ? null : id
             };
 
             try
@@ -148,8 +149,41 @@ namespace ProcesoMedico.Infraestructura.Seguridad
             {
                 throw new Exception("error-> IUnitOfWorkRepository::RecuperarClave", e);
             }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+            }
 
             return null;
+        }
+        
+        public async Task<int> UpdateClave(string id, string clave, string tipo)
+        {
+            var response = new ConfiguracionHorario();
+            using var conn = _context.CreateConnection();
+            conn.Open();
+
+            var param = new
+            {
+                Clave = clave,
+                Id = id,
+                Tipo = tipo
+            };
+
+            try
+            {
+                return await conn.ExecuteAsync("sp_UserLogin_UpdateClave", param, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("error-> UsuarioRepository::UpdateClave", e);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using ProcesoMedico.Infraestructura.Interfaces;
 using ProcesoMedico.Infraestructura.Seguridad;
 using Newtonsoft.Json;
 using System;
+using System.Globalization;
 
 namespace ProcesoMedico.Aplicacion.Services
 {
@@ -134,7 +135,7 @@ namespace ProcesoMedico.Aplicacion.Services
 
         public async Task<int> RecuperarClave(string correo, string tipo)
         {
-            var response = await _unitofWork.RecuperarClave(correo, tipo);
+            var response = await _unitofWork.RecuperarClave(correo, tipo, "");
             if(response != null)
             {
                 generarNotificacionRecuperar(response, correo);
@@ -228,12 +229,18 @@ namespace ProcesoMedico.Aplicacion.Services
             request.Json = JsonConvert.SerializeObject(new
             {
                 NombreCliente = input.Nombres,
-                UrlResetPassword = input.UrlResetPassword,
+                UrlResetPassword = string.Format("{0}?token={1}", input.UrlResetPassword, generarToken(correo, input.Id ?? 0)),
                 TiempoExpiracion = input.TiempoExpiracion,
                 AnioActual = DateTime.Now.Year
             });
 
             _mail.EnviarEmail(request);
+        }
+
+        private string generarToken(string correo, int id)
+        {
+            var crypto = new CryptoHelper();
+            return crypto.Encriptar(string.Format("{0}:{1}", id, correo));
         }
         #endregion
     }
