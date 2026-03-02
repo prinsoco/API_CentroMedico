@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -81,13 +82,14 @@ namespace ProcesoMedico.Aplicacion.Services
             return await _frontReport.ReporteCitaAsync(input);
         }
 
-        public async Task<int> FidelizacionCitaAsync(string estadoCita)
+        public async Task<int> FidelizacionCitaAsync()
         {
-            var response = _unitofWork.GetFidelizacionCitaAsync(estadoCita);
+            var response = _unitofWork.GetFidelizacionCitaAsync();
 
             if (response != null && response.Result.Any())
-            {
-                fidelizacionPaciente(response?.Result, $"{_configuration["Notificacion:Recordatorio"]}", $"{_configuration["Notificacion:Codigo"]}", null, "Notificación de Fidelización :: Cita");
+            { 
+                fidelizacionPaciente(response?.Result, $"{_configuration["Notificacion:Codigo"]}", null);
+
                 return 1;
             }
 
@@ -145,7 +147,7 @@ namespace ProcesoMedico.Aplicacion.Services
 
         }
 
-        private void fidelizacionPaciente(IEnumerable<FidelizacionCita> cita, string tipo, string codigo, string url, string asunto)
+        private void fidelizacionPaciente(IEnumerable<FidelizacionCita> cita, string codigo, string url)
         {
             //Notificaciones
             var notificacion = _unitofWork.Notificaciones(new { Combo = "S" }).GetAwaiter().GetResult();
@@ -156,11 +158,13 @@ namespace ProcesoMedico.Aplicacion.Services
             //parametro login
             var paramLogin = _unitofWork.Parametros(new { Combo = "S", Tipo = "NewUser", Codigo = url }).GetAwaiter().GetResult();
 
-            //plantilla
-            string plantilla = notificacion.Where(x => x.Codigo == codigo && x.Tipo == tipo)?.FirstOrDefault()?.Plantilla;
-
             foreach (var item in cita)
             {
+                //tipo plantilla
+                string tipo = item.EstadoCita == "ATEN" ? $"{_configuration["Notificacion:CitaAtendida"]}" : $"{_configuration["Notificacion:Recordatorio"]}";
+
+                //plantilla
+                string plantilla = notificacion.Where(x => x.Codigo == codigo && x.Tipo == tipo)?.FirstOrDefault()?.Plantilla;
                 var request = new MailRequest();
 
                 //plantilla
@@ -179,12 +183,27 @@ namespace ProcesoMedico.Aplicacion.Services
                         ToName = item.Nombres
                     }
                 };
-                request.Subject = asunto;
+                request.Subject = item.EstadoCita == "ATEN" ? "Notificación de Fidelización :: Cita Atendida" : "Notificación de Fidelización :: Recordatorio de Cita";
 
                 var cultureEc = new CultureInfo("es-EC");
                 string fecha = item.FechaCita;
                 string hora = item.HoraCita;
 
+                //tABLA DE MEDICAMENTOS
+                string receta = string.Empty;
+                string tabla = string.Empty;
+                string diagnostico = string.Empty;
+
+                if (!string.IsNullOrEmpty(item.Receta))
+                {
+                    receta = WebUtility.HtmlDecode(item.Receta);
+                    tabla = $"<div class='table-wrapper'>{receta}</div>";
+                }
+
+                if (!string.IsNullOrEmpty(item.Diagnostico))
+                {
+                    diagnostico = WebUtility.HtmlDecode(item.Diagnostico);
+                }
 
                 request.Json = JsonConvert.SerializeObject(new
                 {
@@ -193,7 +212,10 @@ namespace ProcesoMedico.Aplicacion.Services
                     HoraCita = hora,
                     NombreMedico = item.Medico,
                     Especialidad = item.Especialidad,
-                    AnioActual = DateTime.Now.Year
+                    AnioActual = DateTime.Now.Year,
+                    FechaAtencion = item.FechaCita,
+                    Diagnostico = string.IsNullOrEmpty(diagnostico) ? "" : diagnostico,
+                    TablaMedicamentos = string.IsNullOrEmpty(item.Receta) ? "" : tabla
                 });
 
                 try

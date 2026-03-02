@@ -2,6 +2,7 @@
 using ProcesoMedico.Aplicacion.Interfaces;
 using ProcesoMedico.Aplicacion.Services;
 using ProcesoMedico.Dominio.Entities;
+using ProcesoMedico.Dominio.Utils;
 
 namespace ProcesoMedico.Api.Controllers.v1
 {

@@ -14,6 +14,6 @@ namespace ProcesoMedico.Aplicacion.Interfaces
         Task<IEnumerable<Cita>> ReporteCitaAsync(object input);
 
         //fidelizaciones: citas, receta, etc
-        Task<int> FidelizacionCitaAsync(string estadoCita);
+        Task<int> FidelizacionCitaAsync();
     }
 }

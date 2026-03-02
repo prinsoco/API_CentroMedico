@@ -18,7 +18,7 @@ namespace ProcesoMedico.Infraestructura.Seguridad
         #endregion
 
         #region Fidelizacion
-        Task<IEnumerable<FidelizacionCita>> GetFidelizacionCitaAsync(string estadoCita);
+        Task<IEnumerable<FidelizacionCita>> GetFidelizacionCitaAsync();
         #endregion
 
         #region Notificaciones

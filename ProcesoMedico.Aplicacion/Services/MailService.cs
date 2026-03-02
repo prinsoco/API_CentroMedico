@@ -56,6 +56,8 @@ namespace ProcesoMedico.Aplicacion.Services
                 message.To.AddRange(to);
 
                 message.Subject = email.Subject;
+
+                // 👇 ESTA ES LA LÍNEA CLAVE
                 message.Body = bodyBuilder.ToMessageBody();
 
                 var smtp = new SmtpClient();

@@ -107,19 +107,14 @@ namespace ProcesoMedico.Infraestructura.Seguridad
             return null;
         }
 
-        public async Task<IEnumerable<FidelizacionCita>> GetFidelizacionCitaAsync(string estadoCita)
+        public async Task<IEnumerable<FidelizacionCita>> GetFidelizacionCitaAsync()
         {
             using var conn = _context.CreateConnection();
             conn.Open();
 
-            var param = new
-            {
-                EstadoCita = estadoCita
-            };
-
             try
             {
-                return await conn.QueryAsync<FidelizacionCita>("sp_Fidelizacion_Paciente", param, commandType: CommandType.StoredProcedure);
+                return await conn.QueryAsync<FidelizacionCita>("sp_Fidelizacion_Paciente", null, commandType: CommandType.StoredProcedure);
             }
             catch (Exception e)
             {

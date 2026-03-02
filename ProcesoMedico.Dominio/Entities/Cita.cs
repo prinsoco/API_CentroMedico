@@ -40,6 +40,13 @@ namespace ProcesoMedico.Dominio.Entities
         public string? Especialidad { get; set; }
         public string? Receta { get; set; }
         public string? Correo { get; set; }
+        public string? EstadoCita { get; set; }
+        public string? Diagnostico { get; set; }
 
+    }
+
+    public class FidelizacionReponse
+    {
+        public string? EstadoCita { get; set; }
     }
 }

@@ -154,7 +154,7 @@ namespace ProcesoMedico.Api.Controllers.v1
         [HttpPost("fidelizacion_citas")]
         public async Task<IActionResult> CitasProgramadas()
         {
-            var id = await _service.FidelizacionCitaAsync("");
+            var id = await _service.FidelizacionCitaAsync();
             var response = new ResponseCreate()
             {
                 Id = id,
