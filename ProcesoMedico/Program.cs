@@ -84,6 +84,7 @@ builder.Services.AddScoped<ISubMenuService, SubMenuService>();
 builder.Services.AddScoped<IFrontRepository, FrontRepository>();
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<IHorarioService, HorarioService>();
+builder.Services.AddScoped<IFeriadoService, FeriadoService>();
 
 
 //ADD Cors
